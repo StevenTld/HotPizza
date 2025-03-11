@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  # Base de données MariaDB
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword       # Mot de passe root (à modifier)
+      MYSQL_DATABASE: mydb                    # Nom de la base de données
+      MYSQL_USER: user                        # Nom d'utilisateur
+      MYSQL_PASSWORD: userpassword            # Mot de passe utilisateur (à modifier)
+    volumes:
+      - mariadb_data:/var/lib/mysql           # Volume pour persistance des données
+    ports:
+      - "3306:3306"                           # Port MariaDB
+    networks:
+      - app_network
+
+  # Interface phpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin
+    restart: always
+    depends_on:
+      - mariadb
+    environment:
+      PMA_HOST: mariadb                       # Hôte de la base de données
+      PMA_PORT: 3306                          # Port de la base de données
+      MYSQL_ROOT_PASSWORD: rootpassword       # Mot de passe root (doit correspondre à celui de MariaDB)
+    ports:
+      - "8080:80"                             # Port pour accéder à phpMyAdmin
+    networks:
+      - app_network
+
+# Volumes pour persistance des données
+volumes:
+  mariadb_data:
+
+# Réseau partagé entre les conteneurs
+networks:
+  app_network:
+    driver: bridge

@@ -1,13 +1,11 @@
-package com.example.projet_s8_spring;
+package com;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ProjetS8SpringApplication {
-
+public class App {
     public static void main(String[] args) {
-        SpringApplication.run(ProjetS8SpringApplication.class, args);
+        SpringApplication.run(App.class, args);
     }
-
 }
