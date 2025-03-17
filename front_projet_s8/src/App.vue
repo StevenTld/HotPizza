@@ -1,17 +1,16 @@
 <template>
-  <HelloWorld/>
-  <IngredientCard/>
+  <HelloWorld></HelloWorld>
+  <router-view class="main-content"></router-view>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-import IngredientListView from "@/components/IngredientListView.vue";
+
+import HelloWorld from "@/components/HelloWorld.vue";
 
 export default {
   name: 'App',
   components: {
-    HelloWorld,
-    IngredientCard: IngredientListView
+    HelloWorld
   }
 }
 </script>

@@ -31,7 +31,7 @@ public class IngredientController {
         return ingredientService.saveIngredient(ingredientDto);
     }
 
-    @DeleteMapping("/id")
+    @DeleteMapping("/{id}")
     public Boolean deleteIngredientById(@PathVariable Long id) {
         return ingredientService.deleteIngredient(id);
     }

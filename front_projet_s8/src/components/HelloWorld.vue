@@ -7,7 +7,8 @@
     <ul class="nav-links">
       <li><a href="#" class="active">Accueil</a></li>
       <li><a href="#">Nos Pizzas</a></li>
-      <li><a href="#">Nos Ingrédients</a></li>
+      <li><router-link to="/ingredients">Nos Ingrédients</router-link></li>
+      <li><router-link to="/gestionIngredients">Gestion Ingrédients</router-link></li>
       <li><a href="#">Mon Panier</a></li>
       <li><a href="#">Mon Compte</a></li>
     </ul>
