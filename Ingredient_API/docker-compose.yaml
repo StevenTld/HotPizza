@@ -1,0 +1,20 @@
+﻿services:
+  mariadb:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: HotPizzaIngredients
+    volumes:
+      - ./data:/var/lib/mysql
+    ports:
+      - "7071:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      PMA_HOST: mariadb
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "7081:80"
+    depends_on:
+      - mariadb
