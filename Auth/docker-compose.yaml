@@ -13,7 +13,7 @@
     image: phpmyadmin/phpmyadmin:latest
     environment:
       PMA_HOST: mariadb
-      MYSQL_ROOT_PASSWORD: monMotDePasseSuperSecret
+      MYSQL_ROOT_PASSWORD: root
     ports:
       - "7080:80"
     depends_on:

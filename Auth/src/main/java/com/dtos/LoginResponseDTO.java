@@ -12,7 +12,4 @@ public class LoginResponseDTO {
     private String firstName;
     private String lastName;
     private String role;
-    private Long studentNumber;
-    private Long academicYearId;
-    private String formationName;
 }

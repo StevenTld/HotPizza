@@ -10,4 +10,7 @@ public class UserDTO {
     private Long id;
     private String email;
     private String password; // Utilisé uniquement pour la création/modification
+    private String firstName;
+    private String lastName;
+    private String role;
 }

@@ -16,6 +16,9 @@ public class UserMapper {
         UserDTO dto = new UserDTO();
         dto.setId(user.getId());
         dto.setEmail(user.getEmail());
+        dto.setFirstName(user.getFirstName());
+        dto.setLastName(user.getLastName());
+        dto.setRole(user.getRole());
         // Le mot de passe n'est pas inclus dans le DTO pour des raisons de sécurité
         return dto;
     }
@@ -28,11 +31,13 @@ public class UserMapper {
             user.setId(dto.getId());
         }
         user.setEmail(dto.getEmail());
+        user.setFirstName(dto.getFirstName());
+        user.setLastName(dto.getLastName());
+        user.setRole(dto.getRole());
         // Définir le mot de passe uniquement s'il est présent dans le DTO
         if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
             user.setPassword(dto.getPassword());
         }
-
         return user;
     }
 }
