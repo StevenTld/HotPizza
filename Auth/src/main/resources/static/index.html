@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test d'authentification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .response {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            min-height: 100px;
+        }
+    </style>
+</head>
+<body>
+<h1>Test d'authentification avec JWT</h1>
+
+<h2>Inscription</h2>
+<div class="form-group">
+    <label for="registerEmail">Email:</label>
+    <input type="email" id="registerEmail" required>
+</div>
+<div class="form-group">
+    <label for="registerPassword">Mot de passe:</label>
+    <input type="password" id="registerPassword" required>
+</div>
+<button onclick="register()">S'inscrire</button>
+
+<h2>Connexion</h2>
+<div class="form-group">
+    <label for="loginEmail">Email:</label>
+    <input type="email" id="loginEmail" required>
+</div>
+<div class="form-group">
+    <label for="loginPassword">Mot de passe:</label>
+    <input type="password" id="loginPassword" required>
+</div>
+<button onclick="login()">Se connecter</button>
+
+<h2>Test d'accès protégé</h2>
+<button onclick="getProtectedData()">Accéder aux données protégées</button>
+
+<h2>Réponse:</h2>
+<pre class="response" id="response"></pre>
+
+<script>
+    // URL du serveur Node.js
+    const AUTH_SERVER = 'http://localhost:3000';
+
+    // Stockage du token
+    let token = localStorage.getItem('jwt_token');
+
+    // Fonction d'inscription
+    async function register() {
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+
+        try {
+            const response = await fetch(`${AUTH_SERVER}/api/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+            document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+
+            if (response.ok) {
+                alert('Inscription réussie, vous pouvez maintenant vous connecter');
+            }
+        } catch (error) {
+            document.getElementById('response').textContent = `Erreur: ${error.message}`;
+        }
+    }
+
+    // Fonction de connexion
+    async function login() {
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+
+        try {
+            const response = await fetch(`${AUTH_SERVER}/api/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+            document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+
+            if (response.ok && data.token) {
+                token = data.token;
+                localStorage.setItem('jwt_token', token);
+                alert('Connexion réussie! Token JWT stocké.');
+            }
+        } catch (error) {
+            document.getElementById('response').textContent = `Erreur: ${error.message}`;
+        }
+    }
+
+    // Fonction pour tester l'accès protégé
+    async function getProtectedData() {
+        if (!token) {
+            document.getElementById('response').textContent = 'Erreur: Vous devez être connecté pour accéder à cette ressource';
+            return;
+        }
+
+        try {
+            const response = await fetch(`${AUTH_SERVER}/api/auth/me`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const data = await response.json();
+            document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+        } catch (error) {
+            document.getElementById('response').textContent = `Erreur: ${error.message}`;
+        }
+    }
+</script>
+</body>
+</html>
