@@ -23,19 +23,18 @@ public class IngredientServiceImpl implements IngredientService {
         this.ingredientMapper = ingredientMapper;
     }
 
-
     @Override
     public IngredientDto saveIngredient(IngredientDto ingredientDto) {
         var ingredient = ingredientMapper.toEntity(ingredientDto);
         var savedIngredient = ingredientRepository.save(ingredient);
-
         return ingredientMapper.toDto(savedIngredient);
     }
 
     @Override
     @Transactional(readOnly = true)
     public IngredientDto getIngredientById(Long id) {
-        var ingredient = ingredientRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(
+        var ingredient = ingredientRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(
                         String.format("L'ingrédient avec l'ID %d n'existe pas", id)));
         return ingredientMapper.toDto(ingredient);
     }
@@ -49,6 +48,8 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     @Transactional(readOnly = true)
     public List<IngredientDto> getAllIngredients() {
-        return ingredientRepository.findAll().stream().map(ingredientMapper::toDto).toList();
+        return ingredientRepository.findAll().stream()
+                .map(ingredientMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

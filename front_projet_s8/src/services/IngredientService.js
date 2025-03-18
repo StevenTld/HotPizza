@@ -11,8 +11,13 @@ class IngredientService {
 
 
     async createIngredient(currentIngredient) {
-        const  response = await  axios.post(API_URL, currentIngredient)
-        return response.data
+        try {
+            const response = await axios.post(API_URL, currentIngredient);
+            return response.data;
+        } catch (error) {
+            console.error("Erreur lors de la création de l'ingrédient :", error);
+            throw error; // Ou return null si tu veux éviter une erreur bloquante
+        }
     }
 
     async updateIngredient(id, ingredient) {

@@ -149,6 +149,7 @@ export default {
     editIngredient(ingredient) {
       this.isEditing = true;
       this.editingId = ingredient.id;
+      console.log(this.editingId);
       // Créer une copie profonde pour éviter de modifier l'objet original
       this.currentIngredient = JSON.parse(JSON.stringify(ingredient));
       // Faire défiler vers le formulaire
@@ -167,6 +168,7 @@ export default {
           alert('Ingrédient mis à jour avec succès');
         } else {
           // Ajout d'un nouvel ingrédient
+          console.log(this.currentIngredient.id);
           await IngredientService.createIngredient(this.currentIngredient);
           alert('Ingrédient ajouté avec succès');
         }
