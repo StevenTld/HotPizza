@@ -1,6 +1,6 @@
 package com.dtos;
 
-import com.entities.OrderStatus;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -11,15 +11,7 @@ import java.util.List;
 public class OrderDto {
     private Long id;
     private Long userId;
-    private List<OrderItemDto> items = new ArrayList<>();
-    private Double subtotal;
-    private Double total;
-    private OrderStatus status;
-    private Date pickupTime;
-    private String notes;
-    private String paymentMethod;
-    private String paymentTransactionId;
-    private Boolean paid;
-    private Date createdAt;
-    private Date updatedAt;
+    private List<PizzaItemDto> pizzaItems;
+
+
 }

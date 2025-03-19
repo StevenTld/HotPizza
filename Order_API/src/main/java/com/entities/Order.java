@@ -3,9 +3,9 @@ package com.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 @Table(name = "orders")
@@ -19,32 +19,21 @@ public class Order {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderItem> items = new ArrayList<>();
+    // Stockage des pizzas commandées
+    @ElementCollection
+    @CollectionTable(name = "order_pizza_items", joinColumns = @JoinColumn(name = "order_id"))
+    @MapKeyColumn(name = "pizza_id")
+    @Column(name = "quantity")
+    private Map<Long, Integer> pizzaItems = new HashMap<>();
 
-    @Column(nullable = false)
-    private Double subtotal = 0.0;
+    // Stockage des ingrédients supplémentaires
+    @ElementCollection
+    @CollectionTable(name = "order_pizza_extras", joinColumns = @JoinColumn(name = "order_id"))
+    private Map<String, Integer> extraIngredients = new HashMap<>();
 
-    private Double tax = 0.0;
 
     @Column(nullable = false)
     private Double total = 0.0;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private OrderStatus status = OrderStatus.CREATED;
-
-    @Column(name = "pickup_time")
-    private Date pickupTime;
-
-    @Column(name = "notes")
-    private String notes;
-
-    @Column(name = "payment_method")
-    private String paymentMethod;
-
-    @Column(name = "payment_transaction_id")
-    private String paymentTransactionId;
 
     @Column(name = "payment_status")
     private Boolean paid = false;
@@ -53,44 +42,10 @@ public class Order {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
-    @Column(name = "updated_at")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedAt;
 
     @PrePersist
     protected void onCreate() {
         createdAt = new Date();
-        updatedAt = new Date();
     }
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = new Date();
-    }
-
-    // Méthode utilitaire pour calculer les totaux
-    public void calculateTotals() {
-        this.subtotal = items.stream()
-                .mapToDouble(OrderItem::getTotalPrice)
-                .sum();
-
-        // TVA 10% sur les produits alimentaires
-        this.tax = this.subtotal * 0.1;
-
-        // Total global (sans frais de livraison car retrait en magasin)
-        this.total = this.subtotal + this.tax;
-    }
-
-    // Méthodes pour gérer les relations bidirectionnelles
-    public void addItem(OrderItem item) {
-        items.add(item);
-        item.setOrder(this);
-        calculateTotals();
-    }
-
-    public void removeItem(OrderItem item) {
-        items.remove(item);
-        item.setOrder(null);
-        calculateTotals();
-    }
 }

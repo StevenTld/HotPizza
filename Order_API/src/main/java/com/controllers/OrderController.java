@@ -1,11 +1,10 @@
 package com.controllers;
 
-import com.dtos.CreateOrderDto;
 import com.dtos.OrderDto;
-import com.entities.OrderStatus;
-import com.services.OrderService;
+import com.dtos.CreateOrderDto;
+import com.services.OrderServiceImpl;
 import com.utils.UserUtil;
-import jakarta.validation.Valid;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,68 +16,66 @@ import java.util.List;
 @RequestMapping("/api/orders")
 @CrossOrigin(origins = "*")
 public class OrderController {
-
-    private final OrderService orderService;
+    private final OrderServiceImpl orderService;
 
     @Autowired
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderServiceImpl orderService) {
         this.orderService = orderService;
     }
 
-    /**
-     * Récupère toutes les commandes de l'utilisateur courant
-     */
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderDto> getOrderById(@PathVariable Long id) {
+        try {
+            Long userId = UserUtil.getCurrentUserId();
+            OrderDto orderDto = orderService.getOrderByIdForUser(id, userId);
+            return ResponseEntity.ok(orderDto);
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping
-    public ResponseEntity<List<OrderDto>> getUserOrders() {
-        Long userId = UserUtil.getCurrentUserId();
-
-        List<OrderDto> orders = orderService.getOrdersByUserId(userId);
-        return ResponseEntity.ok(orders);
+    public ResponseEntity<List<OrderDto>> getCurrentUserOrders() {
+        try {
+            Long userId = UserUtil.getCurrentUserId();
+            List<OrderDto> orders = orderService.getOrdersByUserId(userId);
+            return ResponseEntity.ok(orders);
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
-    /**
-     * Récupère les détails d'une commande spécifique
-     */
-    @GetMapping("/{orderId}")
-    public ResponseEntity<OrderDto> getOrderDetails(@PathVariable Long orderId) {
-        Long userId = UserUtil.getCurrentUserId();
-
-        OrderDto order = orderService.getOrderById(orderId, userId);
-        return ResponseEntity.ok(order);
-    }
-
-    /**
-     * Crée une nouvelle commande à partir du panier
-     */
     @PostMapping
-    public ResponseEntity<OrderDto> createOrder(@Valid @RequestBody CreateOrderDto createOrderDto) {
-        Long userId = UserUtil.getCurrentUserId();
-
-        OrderDto newOrder = orderService.createOrderFromCart(userId, createOrderDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newOrder);
+    public ResponseEntity<OrderDto> createOrder(@RequestBody CreateOrderDto createOrderDto) {
+        try {
+            Long userId = UserUtil.getCurrentUserId();
+            // Vérifier que l'utilisateur ne peut pas créer une commande pour quelqu'un d'autre
+            if (!userId.equals(createOrderDto.getUserId())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+            OrderDto createdOrder = orderService.createOrder(createOrderDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
-    /**
-     * Met à jour le statut d'une commande (admin seulement)
-     */
-    @PutMapping("/{orderId}/status")
-    public ResponseEntity<OrderDto> updateOrderStatus(
-            @PathVariable Long orderId,
-            @RequestParam OrderStatus status) {
-        // NOTE: Dans une application réelle, il faudrait vérifier que l'utilisateur a un rôle ADMIN
 
-        OrderDto updatedOrder = orderService.updateOrderStatus(orderId, status);
-        return ResponseEntity.ok(updatedOrder);
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
+        try {
+            Long userId = UserUtil.getCurrentUserId();
+            orderService.deleteOrderForUser(id, userId);
+            return ResponseEntity.noContent().build();
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    /**
-     * Annule une commande
-     */
-    @DeleteMapping("/{orderId}")
-    public ResponseEntity<OrderDto> cancelOrder(@PathVariable Long orderId) {
-        Long userId = UserUtil.getCurrentUserId();
 
-        OrderDto cancelledOrder = orderService.cancelOrder(orderId, userId);
-        return ResponseEntity.ok(cancelledOrder);
-    }
 }

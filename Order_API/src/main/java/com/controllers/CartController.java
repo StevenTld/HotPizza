@@ -1,83 +1,113 @@
 package com.controllers;
 
-import com.dtos.AddCartItemDto;
 import com.dtos.CartDto;
-import com.services.CartService;
+import com.services.CartServiceImpl;
 import com.utils.UserUtil;
-import jakarta.validation.Valid;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/cart")
+@RequestMapping("/api/cart") // Notez le singulier - c'est le panier de l'utilisateur connecté
 @CrossOrigin(origins = "*")
 public class CartController {
-
-    private final CartService cartService;
+    private final CartServiceImpl cartService;
 
     @Autowired
-    public CartController(CartService cartService) {
+    public CartController(CartServiceImpl cartService) {
         this.cartService = cartService;
     }
 
-    /**
-     * Récupère le panier de l'utilisateur courant
-     */
+    // Récupérer le panier de l'utilisateur connecté
     @GetMapping
-    public ResponseEntity<CartDto> getCurrentCart() {
-        // NOTE: Dans une application réelle, l'ID utilisateur serait récupéré à partir du contexte de sécurité
-        // Pour les besoins de démonstration, nous utilisons un ID utilisateur fixe
-        Long userId = UserUtil.getCurrentUserId();
-
-        CartDto cart = cartService.getCartByUserId(userId);
-        return ResponseEntity.ok(cart);
+    public ResponseEntity<CartDto> getCurrentUserCart() {
+        try {
+            Long userId = UserUtil.getCurrentUserId();
+            CartDto cartDto = cartService.getOrCreateCartForUser(userId);
+            return ResponseEntity.ok(cartDto);
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
-    /**
-     * Ajoute un article au panier
-     */
-    @PostMapping("/items")
-    public ResponseEntity<CartDto> addItemToCart(@Valid @RequestBody AddCartItemDto itemDto) {
-        Long userId = UserUtil.getCurrentUserId();
-
-        CartDto updatedCart = cartService.addItemToCart(userId, itemDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(updatedCart);
+    // Ajouter une pizza au panier
+    @PostMapping("/pizzas")
+    public ResponseEntity<CartDto> addPizzaToCart(
+            @RequestParam Long pizzaId,
+            @RequestParam(defaultValue = "1") Integer quantity) {
+        try {
+            Long userId = UserUtil.getCurrentUserId();
+            CartDto updatedCart = cartService.addPizzaToUserCart(userId, pizzaId, quantity);
+            return ResponseEntity.ok(updatedCart);
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    /**
-     * Met à jour la quantité d'un article dans le panier
-     */
-    @PutMapping("/items/{itemId}")
-    public ResponseEntity<CartDto> updateCartItemQuantity(
-            @PathVariable Long itemId,
-            @RequestParam Integer quantity) {
-        Long userId = UserUtil.getCurrentUserId();
-
-        CartDto updatedCart = cartService.updateCartItemQuantity(userId, itemId, quantity);
-        return ResponseEntity.ok(updatedCart);
+    // Ajouter un ingrédient supplémentaire à une pizza
+    @PostMapping("/pizzas/{pizzaId}/extras")
+    public ResponseEntity<CartDto> addExtraIngredientToCart(
+            @PathVariable Long pizzaId,
+            @RequestParam Long ingredientId,
+            @RequestParam(defaultValue = "1") Integer quantity) {
+        try {
+            Long userId = UserUtil.getCurrentUserId();
+            CartDto updatedCart = cartService.addExtraIngredientToUserCart(userId, pizzaId, ingredientId, quantity);
+            return ResponseEntity.ok(updatedCart);
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 
-    /**
-     * Supprime un article du panier
-     */
-    @DeleteMapping("/items/{itemId}")
-    public ResponseEntity<CartDto> removeItemFromCart(@PathVariable Long itemId) {
-        Long userId = UserUtil.getCurrentUserId();
-
-        CartDto updatedCart = cartService.removeItemFromCart(userId, itemId);
-        return ResponseEntity.ok(updatedCart);
+    // Supprimer une pizza du panier
+    @DeleteMapping("/pizzas/{pizzaId}")
+    public ResponseEntity<CartDto> removePizzaFromCart(@PathVariable Long pizzaId) {
+        try {
+            Long userId = UserUtil.getCurrentUserId();
+            CartDto updatedCart = cartService.removePizzaFromUserCart(userId, pizzaId);
+            return ResponseEntity.ok(updatedCart);
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    /**
-     * Vide le panier
-     */
-    @DeleteMapping
+    // Supprimer un ingrédient supplémentaire du panier
+    @DeleteMapping("/pizzas/{pizzaId}/extras/{ingredientId}")
+    public ResponseEntity<CartDto> removeExtraIngredientFromCart(
+            @PathVariable Long pizzaId,
+            @PathVariable Long ingredientId) {
+        try {
+            Long userId = UserUtil.getCurrentUserId();
+            CartDto updatedCart = cartService.removeExtraIngredientFromUserCart(userId, pizzaId, ingredientId);
+            return ResponseEntity.ok(updatedCart);
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Vider le panier
+    @DeleteMapping("/clear")
     public ResponseEntity<CartDto> clearCart() {
-        Long userId = UserUtil.getCurrentUserId();
-
-        CartDto emptyCart = cartService.clearCart(userId);
-        return ResponseEntity.ok(emptyCart);
+        try {
+            Long userId = UserUtil.getCurrentUserId();
+            CartDto emptyCart = cartService.clearUserCart(userId);
+            return ResponseEntity.ok(emptyCart);
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

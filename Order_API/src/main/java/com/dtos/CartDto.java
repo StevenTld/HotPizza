@@ -10,8 +10,7 @@ import java.util.List;
 public class CartDto {
     private Long id;
     private Long userId;
-    private List<CartItemDto> items = new ArrayList<>();
+    private List<PizzaItemDto> pizzaItems = new ArrayList<>();
     private Double total;
     private Date createdAt;
-    private Date updatedAt;
 }

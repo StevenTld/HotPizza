@@ -1,18 +1,11 @@
 package com.dtos;
-
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
-import java.util.Date;
+import java.util.List;
 
 @Data
 public class CreateOrderDto {
-    @NotEmpty(message = "La méthode de paiement est obligatoire")
-    private String paymentMethod;
+    private Long userId;
+    private List<PizzaItemDto> pizzaItems;
 
-    // Date et heure de retrait souhaitée
-    private Date pickupTime;
-
-    // Notes ou instructions spéciales
-    private String notes;
 }

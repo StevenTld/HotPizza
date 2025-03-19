@@ -1,13 +1,12 @@
 package com.dtos;
-
 import lombok.Data;
 
+import java.util.List;
+
 @Data
-public class CartItemDto {
-    private Long id;
+public class ExtraIngredientDto {
     private Long ingredientId;
-    private String ingredientName;
     private Integer quantity;
+    private String name;
     private Double unitPrice;
-    private Double totalPrice;
 }

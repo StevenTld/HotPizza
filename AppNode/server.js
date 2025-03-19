@@ -1,10 +1,13 @@
 // server.js - API Gateway simplifiée
 require('dotenv').config();
+const jwt = require('jsonwebtoken');
 const express = require('express');
 const cors = require('cors');
 const authRoutes = require('./routes/auth.routes');
 const ingredientsRoutes = require('./routes/ingredients.routes');
 const pizzaRoutes = require('./routes/pizza.routes');
+const orderRoutes = require('./routes/order.routes');
+const cartRoutes = require('./routes/cart.routes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -22,7 +25,8 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/ingredients', ingredientsRoutes);
 app.use('/api/pizza', pizzaRoutes);
-
+app.use('/api/order', orderRoutes);
+app.use('/api/cart', cartRoutes);
 // Plus besoin de servir des fichiers statiques ni de route par défaut
 
 // Gestion des erreurs globale
@@ -33,6 +37,31 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Dans server.js
+app.get('/api/debug-token', (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  
+  if (!token) {
+    return res.json({ error: 'No token' });
+  }
+  
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return res.json({ 
+      success: true, 
+      decoded,
+      jwt_secret_defined: !!process.env.JWT_SECRET,
+      jwt_secret_length: process.env.JWT_SECRET?.length
+    });
+  } catch (err) {
+    return res.json({ 
+      error: err.message, 
+      type: err.name,
+      jwt_secret_defined: !!process.env.JWT_SECRET,
+      jwt_secret_length: process.env.JWT_SECRET?.length
+    });
+  }
+});
 // Démarrage du serveur
 app.listen(PORT, () => {
   console.log(`API Gateway démarrée sur http://localhost:${PORT}`);

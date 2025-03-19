@@ -3,9 +3,9 @@ package com.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 @Table(name = "carts")
@@ -19,8 +19,19 @@ public class Cart {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CartItem> items = new ArrayList<>();
+    // Stockage des pizzas dans le panier
+    @ElementCollection
+    @CollectionTable(name = "cart_pizza_items", joinColumns = @JoinColumn(name = "cart_id"))
+    @MapKeyColumn(name = "pizza_id")
+    @Column(name = "quantity")
+    private Map<Long, Integer> pizzaItems = new HashMap<>();
+
+    // Stockage des ingrédients supplémentaires au format "pizzaId:ingredientId"
+    @ElementCollection
+    @CollectionTable(name = "cart_pizza_extras", joinColumns = @JoinColumn(name = "cart_id"))
+    @MapKeyColumn(name = "pizza_ingredient_key") // Clé composite "pizzaId:ingredientId"
+    @Column(name = "quantity")
+    private Map<String, Integer> extraIngredients = new HashMap<>();
 
     @Column(nullable = false)
     private Double total = 0.0;
@@ -29,38 +40,10 @@ public class Cart {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
-    @Column(name = "updated_at")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedAt;
-
     @PrePersist
     protected void onCreate() {
         createdAt = new Date();
-        updatedAt = new Date();
     }
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = new Date();
-    }
 
-    // Méthode utilitaire pour calculer le total
-    public void calculateTotal() {
-        this.total = items.stream()
-                .mapToDouble(CartItem::getTotalPrice)
-                .sum();
-    }
-
-    // Méthodes pour gérer les relations bidirectionnelles
-    public void addItem(CartItem item) {
-        items.add(item);
-        item.setCart(this);
-        calculateTotal();
-    }
-
-    public void removeItem(CartItem item) {
-        items.remove(item);
-        item.setCart(null);
-        calculateTotal();
-    }
 }

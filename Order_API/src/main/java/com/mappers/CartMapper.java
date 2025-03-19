@@ -1,96 +1,79 @@
 package com.mappers;
 
 import com.dtos.CartDto;
-import com.dtos.CartItemDto;
+import com.dtos.PizzaItemDto;
+import com.dtos.ExtraIngredientDto;
 import com.entities.Cart;
-import com.entities.CartItem;
 import org.springframework.stereotype.Component;
 
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class CartMapper {
 
-    /**
-     * Convertit une entité Cart en DTO
-     */
     public CartDto toDto(Cart cart) {
         if (cart == null) {
             return null;
         }
 
         CartDto dto = new CartDto();
+
+        // Copier les propriétés simples
         dto.setId(cart.getId());
         dto.setUserId(cart.getUserId());
         dto.setTotal(cart.getTotal());
         dto.setCreatedAt(cart.getCreatedAt());
-        dto.setUpdatedAt(cart.getUpdatedAt());
 
-        // Conversion des items
-        if (cart.getItems() != null) {
-            dto.setItems(
-                    cart.getItems().stream()
-                            .map(this::toItemDto)
-                            .collect(Collectors.toList())
-            );
+        // Convertir la map des pizzas en liste d'objets PizzaItemDto
+        List<PizzaItemDto> pizzaItems = new ArrayList<>();
+
+        // Extraire les pizzaIds et leurs quantités
+        for (Map.Entry<Long, Integer> entry : cart.getPizzaItems().entrySet()) {
+            Long pizzaId = entry.getKey();
+            Integer quantity = entry.getValue();
+
+            PizzaItemDto pizzaItemDto = new PizzaItemDto();
+            pizzaItemDto.setPizzaId(pizzaId);
+            pizzaItemDto.setQuantity(quantity);
+
+            // Trouver tous les ingrédients supplémentaires pour cette pizza
+            List<ExtraIngredientDto> extraIngredients = new ArrayList<>();
+
+            // Parcourir les ingrédients supplémentaires (format clé: "pizzaId:ingredientId")
+            for (Map.Entry<String, Integer> extraEntry : cart.getExtraIngredients().entrySet()) {
+                String key = extraEntry.getKey();
+                Integer extraQuantity = extraEntry.getValue();
+
+                // Vérifier si cet ingrédient appartient à la pizza courante
+                if (key.startsWith(pizzaId + ":")) {
+                    // Extraire l'ID de l'ingrédient de la clé composite
+                    String[] parts = key.split(":");
+                    if (parts.length == 2) {
+                        Long ingredientId = Long.valueOf(parts[1]);
+
+                        ExtraIngredientDto extraDto = new ExtraIngredientDto();
+                        extraDto.setIngredientId(ingredientId);
+                        extraDto.setQuantity(extraQuantity);
+
+                        extraIngredients.add(extraDto);
+                    }
+                }
+            }
+
+            // Ajouter les ingrédients supplémentaires à la pizza
+            pizzaItemDto.setExtraIngredients(extraIngredients);
+
+            // Ajouter la pizza à la liste
+            pizzaItems.add(pizzaItemDto);
         }
+
+        dto.setPizzaItems(pizzaItems);
 
         return dto;
     }
 
-    /**
-     * Convertit un DTO CartDto en entité
-     */
-    public Cart toEntity(CartDto dto) {
-        if (dto == null) {
-            return null;
-        }
-
-        Cart cart = new Cart();
-        cart.setId(dto.getId());
-        cart.setUserId(dto.getUserId());
-        cart.setTotal(dto.getTotal());
-        cart.setCreatedAt(dto.getCreatedAt());
-        cart.setUpdatedAt(dto.getUpdatedAt());
-
-        return cart;
-    }
-
-    /**
-     * Convertit une entité CartItem en DTO
-     */
-    public CartItemDto toItemDto(CartItem item) {
-        if (item == null) {
-            return null;
-        }
-
-        CartItemDto dto = new CartItemDto();
-        dto.setId(item.getId());
-        dto.setIngredientId(item.getIngredientId());
-        dto.setIngredientName(item.getIngredientName());
-        dto.setQuantity(item.getQuantity());
-        dto.setUnitPrice(item.getUnitPrice());
-        dto.setTotalPrice(item.getTotalPrice());
-
-        return dto;
-    }
-
-    /**
-     * Convertit un DTO CartItemDto en entité
-     */
-    public CartItem toItemEntity(CartItemDto dto) {
-        if (dto == null) {
-            return null;
-        }
-
-        CartItem item = new CartItem();
-        item.setId(dto.getId());
-        item.setIngredientId(dto.getIngredientId());
-        item.setIngredientName(dto.getIngredientName());
-        item.setQuantity(dto.getQuantity());
-        item.setUnitPrice(dto.getUnitPrice());
-        item.setTotalPrice(dto.getTotalPrice());
-
-        return item;
-    }
+    // Note: Pas besoin de méthode toEntity car nous créons/modifions des carts
+    // directement dans le service à partir des informations des DTOs
 }
