@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const authRoutes = require('./routes/auth.routes');
 const ingredientsRoutes = require('./routes/ingredients.routes');
+const pizzaRoutes = require('./routes/pizza.routes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,6 +21,7 @@ app.use(express.json());
 // Routes API
 app.use('/api/auth', authRoutes);
 app.use('/api/ingredients', ingredientsRoutes);
+app.use('/api/pizza', pizzaRoutes);
 
 // Plus besoin de servir des fichiers statiques ni de route par défaut
 

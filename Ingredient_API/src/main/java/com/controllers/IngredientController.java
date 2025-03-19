@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/ingredients")
-@CrossOrigin(origins = "http://localhost:8081", allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:8079", allowCredentials = "true")
 public class IngredientController {
 
     private final IngredientServiceImpl ingredientService;
