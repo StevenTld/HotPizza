@@ -1,12 +1,9 @@
-// routes/ingredients.routes.js - Routes pour l'API Ingredients
+// routes/pizza.routes.js
 const express = require('express');
 const router = express.Router();
-const { verifyToken } = require('../middlewares/auth.middleware');
 const pizzaService = require('../services/pizza.service');
 
-// Middleware de vérification du token pour toutes les routes
-
-// Récupérer tous les ingrédients
+// Pas de middleware de vérification de token
 router.get('/', async (req, res, next) => {
     try {
         const pizzas = await pizzaService.getAllPizzas();

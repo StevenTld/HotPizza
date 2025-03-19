@@ -12,6 +12,8 @@ class AuthService {
         return response.data
     }
 
+
+
     // Inscription
     async register(user) {
         const response = await axios.post(`${API_URL}/register`, user)
