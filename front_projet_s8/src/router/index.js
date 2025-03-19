@@ -7,6 +7,7 @@ import RegisterView from '@/components/RegisterView.vue'
 import HomeView from '@/components/HomeView.vue'
 import IngredientListView from "@/components/IngredientListView.vue";
 import Gestion_Ingredient from "@/components/Gestion_Ingredient.vue"
+import PizzaListView from "@/components/PizzaListView.vue";
 
 const routes = [
     {
@@ -30,7 +31,7 @@ const routes = [
       name: 'GestionIngredient',
       component: Gestion_Ingredient,
         meta: {
-          requiresAuth: false
+          requiresAuth: true
         }
     },
     {
@@ -45,6 +46,14 @@ const routes = [
         path: '/ingredients',
         name: 'Ingredients',
         component: IngredientListView,
+        meta: {
+            requiresAuth: false
+        }
+    },
+    {
+        path: '/pizzas',
+        name: 'Pizzas',
+        component: PizzaListView,
         meta: {
             requiresAuth: false
         }

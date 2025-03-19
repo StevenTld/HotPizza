@@ -8,14 +8,13 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Ingredient {
+public class Pizza {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String description;
+    private String composition;
     private Double prix;
     private String photo;
 
 }
-
