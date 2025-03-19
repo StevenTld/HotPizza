@@ -4,6 +4,7 @@ import com.dtos.CreateOrderDto;
 import com.dtos.OrderDto;
 import com.entities.OrderStatus;
 import com.services.OrderService;
+import com.utils.UserUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,8 +30,7 @@ public class OrderController {
      */
     @GetMapping
     public ResponseEntity<List<OrderDto>> getUserOrders() {
-        // NOTE: Dans une application réelle, l'ID utilisateur serait récupéré à partir du contexte de sécurité
-        Long userId = 1L; // À remplacer par l'obtention de l'ID utilisateur depuis le token JWT
+        Long userId = UserUtil.getCurrentUserId();
 
         List<OrderDto> orders = orderService.getOrdersByUserId(userId);
         return ResponseEntity.ok(orders);
@@ -41,8 +41,7 @@ public class OrderController {
      */
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderDto> getOrderDetails(@PathVariable Long orderId) {
-        // NOTE: Dans une application réelle, l'ID utilisateur serait récupéré à partir du contexte de sécurité
-        Long userId = 1L; // À remplacer par l'obtention de l'ID utilisateur depuis le token JWT
+        Long userId = UserUtil.getCurrentUserId();
 
         OrderDto order = orderService.getOrderById(orderId, userId);
         return ResponseEntity.ok(order);
@@ -53,8 +52,7 @@ public class OrderController {
      */
     @PostMapping
     public ResponseEntity<OrderDto> createOrder(@Valid @RequestBody CreateOrderDto createOrderDto) {
-        // NOTE: Dans une application réelle, l'ID utilisateur serait récupéré à partir du contexte de sécurité
-        Long userId = 1L; // À remplacer par l'obtention de l'ID utilisateur depuis le token JWT
+        Long userId = UserUtil.getCurrentUserId();
 
         OrderDto newOrder = orderService.createOrderFromCart(userId, createOrderDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(newOrder);
@@ -78,8 +76,7 @@ public class OrderController {
      */
     @DeleteMapping("/{orderId}")
     public ResponseEntity<OrderDto> cancelOrder(@PathVariable Long orderId) {
-        // NOTE: Dans une application réelle, l'ID utilisateur serait récupéré à partir du contexte de sécurité
-        Long userId = 1L; // À remplacer par l'obtention de l'ID utilisateur depuis le token JWT
+        Long userId = UserUtil.getCurrentUserId();
 
         OrderDto cancelledOrder = orderService.cancelOrder(orderId, userId);
         return ResponseEntity.ok(cancelledOrder);

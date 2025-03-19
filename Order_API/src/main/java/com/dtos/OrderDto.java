@@ -13,7 +13,6 @@ public class OrderDto {
     private Long userId;
     private List<OrderItemDto> items = new ArrayList<>();
     private Double subtotal;
-    private Double tax;
     private Double total;
     private OrderStatus status;
     private Date pickupTime;

@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class OrderItemDto {
     private Long id;
-    private Long ingredientId;
-    private String ingredientName;
+    private Long pizzaId;
+    private String pizzaName;
     private Integer quantity;
     private Double unitPrice;
     private Double totalPrice;

@@ -23,7 +23,6 @@ public class OrderMapper {
         dto.setId(order.getId());
         dto.setUserId(order.getUserId());
         dto.setSubtotal(order.getSubtotal());
-        dto.setTax(order.getTax());
         dto.setTotal(order.getTotal());
         dto.setStatus(order.getStatus());
         dto.setPickupTime(order.getPickupTime());
@@ -56,8 +55,8 @@ public class OrderMapper {
 
         OrderItemDto dto = new OrderItemDto();
         dto.setId(item.getId());
-        dto.setIngredientId(item.getIngredientId());
-        dto.setIngredientName(item.getIngredientName());
+        dto.setPizzaId(item.getIngredientId());
+        dto.setPizzaName(item.getIngredientName());
         dto.setQuantity(item.getQuantity());
         dto.setUnitPrice(item.getUnitPrice());
         dto.setTotalPrice(item.getTotalPrice());
