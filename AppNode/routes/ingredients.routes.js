@@ -5,7 +5,7 @@ const { verifyToken } = require('../middlewares/auth.middleware');
 const ingredientsService = require('../services/ingredients.service');
 
 // Middleware de vérification du token pour toutes les routes
-router.use(verifyToken);
+//router.use(verifyToken);
 
 // Récupérer tous les ingrédients
 router.get('/', async (req, res, next) => {

@@ -1,57 +1,57 @@
 <template>
-  <div class="ingredient-management">
+  <div class="pizza-management">
     <h2 class="section-title" @click="toggleContent" :class="{ 'clickable': true, 'active': isContentVisible }">
-      Gestion des Ingrédients
+      Gestion des Pizzas
       <span class="toggle-icon">{{ isContentVisible ? '▼' : '▶' }}</span>
     </h2>
 
     <div v-if="isContentVisible">
       <!-- Formulaire d'ajout/modification -->
-      <div class="ingredient-form">
-        <h3>{{ isEditing ? 'Modifier l\'ingrédient' : 'Ajouter un nouvel ingrédient' }}</h3>
+      <div class="pizza-form">
+        <h3>{{ isEditing ? 'Modifier la pizza' : 'Ajouter une nouvelle pizza' }}</h3>
         <div class="form-group" v-if="isEditing">
           <label for="id">ID</label>
-          <label>{{currentIngredient.id}}</label>
+          <label>{{currentPizza.id}}</label>
         </div>
         <div class="form-group">
           <label for="name">Nom</label>
-          <input type="text" id="name" v-model="currentIngredient.name" required>
+          <input type="text" id="name" v-model="currentPizza.name" required>
         </div>
 
         <div class="form-group">
-          <label for="description">Description</label>
-          <textarea id="description" v-model="currentIngredient.description" rows="3"></textarea>
+          <label for="composition">Composition</label>
+          <textarea id="composition" v-model="currentPizza.composition" rows="3"></textarea>
         </div>
 
         <div class="form-group">
           <label for="price">Prix (€)</label>
-          <input type="number" id="price" v-model="currentIngredient.prix" step="0.01" min="0" required>
+          <input type="number" id="price" v-model="currentPizza.prix" step="0.01" min="0" required>
         </div>
 
         <div class="form-group">
           <label for="photo">URL Photo</label>
-          <input type="text" id="photo" v-model="currentIngredient.photo">
+          <input type="text" id="photo" v-model="currentPizza.photo">
         </div>
 
         <div class="form-preview">
           <h4>Aperçu de l'image</h4>
           <div class="image-preview">
-            <img v-if="currentIngredient.photo" :src="currentIngredient.photo" alt="Aperçu">
+            <img v-if="currentPizza.photo" :src="currentPizza.photo" alt="Aperçu">
             <div v-else class="no-preview">Aucune image disponible</div>
           </div>
         </div>
 
         <div class="form-actions">
           <button class="btn-cancel" @click="resetForm">Annuler</button>
-          <button class="btn-submit" @click="saveIngredient">{{ isEditing ? 'Mettre à jour' : 'Ajouter' }}</button>
+          <button class="btn-submit" @click="savePizza">{{ isEditing ? 'Mettre à jour' : 'Ajouter' }}</button>
         </div>
       </div>
 
-      <!-- Liste des ingrédients avec options de gestion -->
-      <div class="ingredients-list">
-        <h3>Liste des Ingrédients</h3>
+      <!-- Liste des pizzas avec options de gestion -->
+      <div class="pizzas-list">
+        <h3>Liste des Pizzas</h3>
         <div class="search-bar">
-          <input type="text" v-model="searchQuery" placeholder="Rechercher un ingrédient...">
+          <input type="text" v-model="searchQuery" placeholder="Rechercher une pizza...">
         </div>
 
         <table>
@@ -59,27 +59,27 @@
           <tr>
             <th>Image</th>
             <th>Nom</th>
-            <th>Description</th>
+            <th>Composition</th>
             <th>Prix (€)</th>
             <th>Actions</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="ingredient in filteredIngredients" :key="ingredient.id">
+          <tr v-for="pizza in filteredPizzas" :key="pizza.id">
             <td class="image-cell">
-              <img v-if="ingredient.photo" :src="ingredient.photo" :alt="ingredient.name" class="thumbnail">
+              <img v-if="pizza.photo" :src="pizza.photo" :alt="pizza.name" class="thumbnail">
               <div v-else class="no-thumbnail">N/A</div>
             </td>
-            <td>{{ ingredient.name }}</td>
-            <td class="description-cell">{{ ingredient.description }}</td>
-            <td>{{ ingredient.prix }}</td>
+            <td>{{ pizza.name }}</td>
+            <td class="composition-cell">{{ pizza.composition }}</td>
+            <td>{{ pizza.prix }}</td>
             <td class="actions-cell">
-              <button class="btn-edit" @click="editIngredient(ingredient)">Modifier</button>
-              <button class="btn-delete" @click="confirmDelete(ingredient)">Supprimer</button>
+              <button class="btn-edit" @click="editPizza(pizza)">Modifier</button>
+              <button class="btn-delete" @click="confirmDelete(pizza)">Supprimer</button>
             </td>
           </tr>
-          <tr v-if="filteredIngredients.length === 0">
-            <td colspan="5" class="no-results">Aucun ingrédient trouvé</td>
+          <tr v-if="filteredPizzas.length === 0">
+            <td colspan="5" class="no-results">Aucune pizza trouvée</td>
           </tr>
           </tbody>
         </table>
@@ -90,10 +90,10 @@
     <div class="modal" v-if="showDeleteModal">
       <div class="modal-content">
         <h3>Confirmation de suppression</h3>
-        <p>Êtes-vous sûr de vouloir supprimer l'ingrédient "{{ ingredientToDelete.name }}" ?</p>
+        <p>Êtes-vous sûr de vouloir supprimer la pizza "{{ pizzaToDelete.name }}" ?</p>
         <div class="modal-actions">
           <button class="btn-cancel" @click="showDeleteModal = false">Annuler</button>
-          <button class="btn-confirm-delete" @click="deleteIngredient(ingredientToDelete.id)">Confirmer</button>
+          <button class="btn-confirm-delete" @click="deletePizza(pizzaToDelete.id)">Confirmer</button>
         </div>
       </div>
     </div>
@@ -101,32 +101,32 @@
 </template>
 
 <script>
-import IngredientService from '@/services/IngredientService'
+import PizzaService from '@/services/PizzaService'
 
 export default {
-  name: 'Gestion_Ingredient',
+  name: 'Gestion_Pizza',
   data() {
     return {
-      ingredients: [],
-      currentIngredient: this.getEmptyIngredient(),
+      pizzas: [],
+      currentPizza: this.getEmptyPizza(),
       isEditing: false,
       editingId: null,
       searchQuery: '',
       showDeleteModal: false,
-      ingredientToDelete: null,
+      pizzaToDelete: null,
       isContentVisible: false // État pour contrôler la visibilité du contenu
     }
   },
   computed: {
-    filteredIngredients() {
+    filteredPizzas() {
       if (!this.searchQuery) {
-        return this.ingredients;
+        return this.pizzas;
       }
 
       const query = this.searchQuery.toLowerCase();
-      return this.ingredients.filter(ingredient => {
-        return ingredient.name.toLowerCase().includes(query) ||
-            ingredient.description.toLowerCase().includes(query);
+      return this.pizzas.filter(pizza => {
+        return pizza.name.toLowerCase().includes(query) ||
+            pizza.composition.toLowerCase().includes(query);
       });
     }
   },
@@ -134,92 +134,92 @@ export default {
     toggleContent() {
       this.isContentVisible = !this.isContentVisible;
       // Charger les données uniquement quand le contenu est visible pour la première fois
-      if (this.isContentVisible && this.ingredients.length === 0) {
-        this.fetchIngredients();
+      if (this.isContentVisible && this.pizzas.length === 0) {
+        this.fetchPizzas();
       }
     },
-    getEmptyIngredient() {
+    getEmptyPizza() {
       return {
         name: "",
-        description: "",
+        composition: "",
         prix: "",
         photo: ""
       }
     },
-    async fetchIngredients() {
+    async fetchPizzas() {
       try {
-        this.ingredients = await IngredientService.getAllIngredients();
+        this.pizzas = await PizzaService.getAllPizzas();
       } catch (error) {
-        console.error('Erreur lors de la récupération des ingrédients:', error);
-        alert('Erreur lors de la récupération des ingrédients');
+        console.error('Erreur lors de la récupération des pizzas:', error);
+        alert('Erreur lors de la récupération des pizzas');
       }
     },
     resetForm() {
-      this.currentIngredient = this.getEmptyIngredient();
+      this.currentPizza = this.getEmptyPizza();
       this.isEditing = false;
       this.editingId = null;
     },
-    editIngredient(ingredient) {
+    editPizza(pizza) {
       this.isEditing = true;
-      this.editingId = ingredient.id;
+      this.editingId = pizza.id;
       console.log(this.editingId);
       // Créer une copie profonde pour éviter de modifier l'objet original
-      this.currentIngredient = JSON.parse(JSON.stringify(ingredient));
+      this.currentPizza = JSON.parse(JSON.stringify(pizza));
       // Faire défiler vers le formulaire
-      this.$el.querySelector('.ingredient-form').scrollIntoView({ behavior: 'smooth' });
+      this.$el.querySelector('.pizza-form').scrollIntoView({ behavior: 'smooth' });
     },
-    async saveIngredient() {
+    async savePizza() {
       try {
-        if (!this.currentIngredient.name || !this.currentIngredient.prix) {
+        if (!this.currentPizza.name || !this.currentPizza.prix) {
           alert('Veuillez remplir tous les champs obligatoires');
           return;
         }
 
         if (this.isEditing) {
-          // Mise à jour d'un ingrédient existant
-          await IngredientService.updateIngredient(this.editingId, this.currentIngredient);
-          alert('Ingrédient mis à jour avec succès');
+          // Mise à jour d'une pizza existante
+          await PizzaService.updatePizza(this.editingId, this.currentPizza);
+          alert('Pizza mise à jour avec succès');
         } else {
-          // Ajout d'un nouvel ingrédient
-          console.log(this.currentIngredient.id);
-          await IngredientService.createIngredient(this.currentIngredient);
-          alert('Ingrédient ajouté avec succès');
+          // Ajout d'une nouvelle pizza
+          console.log(this.currentPizza.id);
+          await PizzaService.createPizza(this.currentPizza);
+          alert('Pizza ajoutée avec succès');
         }
 
         // Rafraîchir la liste et réinitialiser le formulaire
-        this.fetchIngredients();
+        this.fetchPizzas();
         this.resetForm();
       } catch (error) {
         console.error('Erreur lors de l\'enregistrement:', error);
-        alert('Erreur lors de l\'enregistrement de l\'ingrédient');
+        alert('Erreur lors de l\'enregistrement de la pizza');
       }
     },
-    confirmDelete(ingredient) {
-      this.ingredientToDelete = ingredient;
+    confirmDelete(pizza) {
+      this.pizzaToDelete = pizza;
       this.showDeleteModal = true;
     },
-    async deleteIngredient(id) {
+    async deletePizza(id) {
       try {
-        await IngredientService.deleteIngredient(id);
+        await PizzaService.deletePizza(id);
         this.showDeleteModal = false;
-        this.ingredientToDelete = null;
-        alert('Ingrédient supprimé avec succès');
-        await this.fetchIngredients();
+        this.pizzaToDelete = null;
+        alert('Pizza supprimée avec succès');
+        await this.fetchPizzas();
       } catch (error) {
         console.error('Erreur lors de la suppression:', error);
-        alert('Erreur lors de la suppression de l\'ingrédient');
+        alert('Erreur lors de la suppression de la pizza');
       }
     }
   },
   mounted() {
-    // Ne pas charger les ingrédients automatiquement au chargement du composant
+    // Ne pas charger les pizzas automatiquement au chargement du composant
     // Les données seront chargées quand l'utilisateur cliquera sur le titre
   }
 }
 </script>
 
 <style scoped>
-.ingredient-management {
+.pizza-management {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
@@ -259,7 +259,7 @@ export default {
 }
 
 /* Formulaire */
-.ingredient-form {
+.pizza-form {
   background-color: #f9f9f9;
   border-radius: 8px;
   padding: 20px;
@@ -321,8 +321,8 @@ export default {
   gap: 10px;
 }
 
-/* Liste des ingrédients */
-.ingredients-list {
+/* Liste des pizzas */
+.pizzas-list {
   background-color: white;
   border-radius: 8px;
   padding: 20px;
@@ -382,7 +382,7 @@ td {
   font-size: 12px;
 }
 
-.description-cell {
+.composition-cell {
   max-width: 300px;
   white-space: nowrap;
   overflow: hidden;

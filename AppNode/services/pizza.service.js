@@ -1,11 +1,11 @@
-// services/ingredients.service.js - Service pour l'API Ingredients
+// services/pizza.service.js - Service pour l'API Pizza
 const axios = require('axios');
 
-// URL de base de l'API Ingredients
+// URL de base de l'API Pizza
 const PIZZA_API_URL = process.env.PIZZA_API_URL || 'http://localhost:8002';
 
 /**
- * Récupère tous les ingrédients
+ * Récupère toutes les pizzas
  */
 const getAllPizzas = async () => {
     try {
@@ -17,7 +17,7 @@ const getAllPizzas = async () => {
 };
 
 /**
- * Récupère un ingrédient par son ID
+ * Récupère une pizza par son ID
  */
 const getPizzaById = async (id) => {
     try {
@@ -29,7 +29,7 @@ const getPizzaById = async (id) => {
 };
 
 /**
- * Crée un nouvel ingrédient
+ * Crée une nouvelle pizza
  */
 const createPizza = async (pizzaData) => {
     try {
@@ -41,11 +41,23 @@ const createPizza = async (pizzaData) => {
 };
 
 /**
- * Supprime un ingrédient
+ * Met à jour une pizza existante
  */
-const deleteIngredient = async (id) => {
+const updatePizza = async (id, pizzaData) => {
     try {
-        const response = await axios.delete(`${INGREDIENT_API_URL}/api/ingredients/${id}`);
+        const response = await axios.put(`${PIZZA_API_URL}/api/pizza/${id}`, pizzaData);
+        return response.data;
+    } catch (error) {
+        handleApiError(error);
+    }
+};
+
+/**
+ * Supprime une pizza
+ */
+const deletePizza = async (id) => {
+    try {
+        const response = await axios.delete(`${PIZZA_API_URL}/api/pizza/${id}`);
         return response.data;
     } catch (error) {
         handleApiError(error);
@@ -63,12 +75,13 @@ const handleApiError = (error) => {
         customError.statusCode = error.response.status;
         throw customError;
     }
-    throw new Error('Erreur de connexion à l\'API Ingredients');
+    throw new Error('Erreur de connexion à l\'API Pizza');
 };
 
 module.exports = {
     getAllPizzas,
-    //getIngredientById,
-    //createIngredient,
-    //deleteIngredient
+    getPizzaById,
+    createPizza,
+    updatePizza,
+    deletePizza
 };
