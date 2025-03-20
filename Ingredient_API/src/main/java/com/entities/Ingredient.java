@@ -18,3 +18,4 @@ public class Ingredient {
     private String photo;
 
 }
+

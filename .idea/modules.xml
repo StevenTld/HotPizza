@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/HotPizza.iml" filepath="$PROJECT_DIR$/.idea/HotPizza.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Projet_S8_Spring.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Projet_S8_Spring.main.iml" />
+    </modules>
+  </component>
+</project>

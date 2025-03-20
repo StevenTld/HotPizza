@@ -1,0 +1,169 @@
+openapi: 3.0.3
+info:
+  title: API d'authentification
+  description: |
+    API REST permettant l'authentification au système de gestion des étudiants dans le système.
+    Cette API permet d'inscrire un utilisateur et de lui créer un token de session.
+  version: 1.0.0
+  contact:
+    name: Yoann Le Rouzic
+    email: e22311734@etudiant.univ-brest.fr
+
+servers:
+  - url: http://localhost:8080
+    description: Serveur de développement local
+
+tags:
+  - name: users
+    description: Opérations liées à la gestion des utilisateurs
+  - name: auth
+    description: Opérations liées à l'authentification
+
+paths:
+  /register:
+    post:
+      tags:
+        - users
+      summary: Inscrit un utilisateur
+      description: Enregistre un utilisateur dans le système à l'aide d'un identifiant et du hash d'un mot de passe
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Utilisateur créé avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Nom d'utilisateur invalide
+        '500':
+          description: Erreur serveur
+    put:
+    # TODO utiliser token
+      tags:
+        - users
+      summary: Change le mot de passe d'un utilisateur
+      description: Change le mot de passe d'un utilisateur
+      operationId: changeUserPassword
+      parameters:
+        - in: header
+          name: Authorization
+          description: Bearer + le token de l'utilisateur
+          schema:
+            format: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordPayload'
+      responses:
+        '201':
+          description: Utilisateur mis à jour avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '403':
+          description: Accès refusé. Nom d'utilisateur ou mot de passe incorrect.
+        '404':
+          description: Utilisateur non trouvé
+        '500':
+          description: Erreur serveur
+  /login:
+    post:
+      tags:
+        - auth
+      summary: Démarre une nouvelle session pour l'utilisateur
+      description: Crée un nouveau token de session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Token créé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '403':
+          description: Accès refusé, utilisateur ou mot de passe incorrect
+        '404':
+          description: Utilisateur introuvable
+        '500':
+          description: Erreur interne serveur
+    delete:
+      tags:
+        - auth
+      summary: Termine la session d'un utilisateur
+      description: Détruit le token de session
+      parameters:
+        - in: header
+          name: Authorization
+          description: Bearer + le token de l'utilisateur
+          schema:
+            format: string
+      responses:
+        '200':
+          description: Token supprimé
+        '404':
+          description: Token inexistant
+        '500':
+          description: Erreur interne serveur
+
+components:
+  schemas:
+    User:
+      type: object
+      description: Représentation d'un utilisateur dans le système
+      properties:
+        username:
+          type: string
+          format: string
+          description: Le nom de l'utilisateur, unique
+          example: admin
+        passwordHash:
+          type: string
+          format: string
+          description: Le hash (SHA256) du mot de passe de l'utilisateur
+          example: 6b3a55e0261b0304143f805a24924d0c1c44524821305f31d9277843b8a10f4e
+      required:
+        - username
+        - passwordHash
+    Token:
+      type: object
+      description: Token d'accès
+      properties:
+        token:
+          type: string
+          format: string
+          description: Token
+          example: YnnENHuJ?qR4
+    ChangePasswordPayload:
+      type: object
+      description: Payload de changement de mot de passe
+      properties:
+        currentPassword:
+          type: string
+          format: string
+          description: Hash du mot de passe courant
+          example: 6b3a55e0261b0304143f805a24924d0c1c44524821305f31d9277843b8a10f4e
+        newPassword:
+          type: string
+          format: string
+          description: Hash du nouveau mot de passe
+          example: 9f56e761d79bfdb34304a012586cb04d16b435ef6130091a97702e559260a2f2
+      required:
+        - currentPassword
+        - newPassword
+
+

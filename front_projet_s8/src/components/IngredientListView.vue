@@ -20,11 +20,10 @@
 import IngredientService from '@/services/IngredientService'
 
 export default {
-  name: 'IngredientCard',
+  name: 'IngredientListView',
   data() {
     return {
       ingredients: [],
-      //curentIngredient: this.getEmptyIngredient()
     }
   },
   methods: {

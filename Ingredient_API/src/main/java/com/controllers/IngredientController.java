@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/ingredients")
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "http://localhost:8079", allowCredentials = "true")
 public class IngredientController {
 
     private final IngredientServiceImpl ingredientService;
@@ -31,7 +31,12 @@ public class IngredientController {
         return ingredientService.saveIngredient(ingredientDto);
     }
 
-    @DeleteMapping("/id")
+    @PutMapping("/{id}")
+    public IngredientDto updateIngredient(@PathVariable Long id, @RequestBody IngredientDto ingredientDto) {
+        return ingredientService.saveIngredient(ingredientDto);
+    }
+
+    @DeleteMapping("/{id}")
     public Boolean deleteIngredientById(@PathVariable Long id) {
         return ingredientService.deleteIngredient(id);
     }
