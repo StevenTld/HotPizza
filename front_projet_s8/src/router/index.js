@@ -8,6 +8,7 @@ import HomeView from '@/components/HomeView.vue'
 import IngredientListView from "@/components/IngredientListView.vue";
 import Gestion_Ingredient from "@/components/Gestion_Ingredient.vue"
 import PizzaListView from "@/components/PizzaListView.vue";
+import AdminView from "@/components/AdminView.vue";
 
 const routes = [
     {
@@ -56,6 +57,14 @@ const routes = [
         component: PizzaListView,
         meta: {
             requiresAuth: false
+        }
+    },
+    {
+        path: '/admin',
+        name: 'Admin',
+        component: AdminView,
+        meta: {
+            requiresAuth: true
         }
     },
     // Ajoutez ici toutes vos autres routes

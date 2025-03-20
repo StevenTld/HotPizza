@@ -10,6 +10,7 @@
       <li><router-link to="/ingredients">Nos Ingrédients</router-link></li>
       <li ><router-link to="/panier">Mon Panier</router-link></li>
       <li v-if="isLoggedIn"><router-link to="/compte">Mon Compte</router-link></li>
+      <li v-if="isLoggedIn"><router-link to="/admin">Administration</router-link></li>
       <li v-if="isLoggedIn" class="logout-item">
         <button @click="logout" class="logout-button">Se déconnecter</button>
       </li>
