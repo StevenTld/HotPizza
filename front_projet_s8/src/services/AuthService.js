@@ -42,6 +42,31 @@ class AuthService {
         return !!localStorage.getItem('token')
     }
 
+    // Méthode pour vérifier si l'utilisateur est admin (version synchrone)
+    isAdmin() {
+        return this.userRole === 'admin';
+    }
+
+    // Méthode pour récupérer et mettre en cache le rôle utilisateur
+    async fetchUserRole() {
+        try {
+            console.log('Fetching user role...');
+            const response = await axios.get(`${API_URL}/me`, {
+                headers: {
+                    Authorization: `Bearer ${this.getToken()}`
+                }
+            });
+
+            console.log('Response data:', response.data);
+            this.userRole = response.data.role;
+            console.log('User role set to:', this.userRole);
+            return this.userRole;
+        } catch (error) {
+            console.error('Erreur lors de la récupération du rôle:', error);
+            return null;
+        }
+    }
+
     // Récupérer le token
     getToken() {
         return localStorage.getItem('token')

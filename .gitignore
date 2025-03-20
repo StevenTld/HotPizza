@@ -1,1 +1,22 @@
+# Ignorer les fichiers de logs de MySQL/MariaDB
+/Ingredient_API/data/
+/Auth/data/
+# Ignorer les fichiers des bases de données en général
+*.sql
+*.log
 
+# Ignorer les dossiers liés à Docker
+**/data/
+
+# Ignorer les fichiers compilés et dépendances Java
+target/
+*.class
+*.jar
+
+# Ignorer les fichiers Node.js pour Vue
+node_modules/
+dist/
+
+# Ignorer les fichiers système
+.DS_Store
+.env

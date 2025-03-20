@@ -46,7 +46,8 @@ public class AuthServiceImpl {
         LoginResponseDTO response = new LoginResponseDTO();
         response.setUserId(user.getId());
         response.setEmail(user.getEmail());
-        // Autres champs à remplir selon votre modèle...
+        response.setRole(user.getRole());
+
 
         return response;
     }

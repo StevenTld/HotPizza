@@ -10,7 +10,7 @@
       <li><router-link to="/ingredients">Nos Ingrédients</router-link></li>
       <li ><router-link to="/panier">Mon Panier</router-link></li>
       <li v-if="isLoggedIn"><router-link to="/compte">Mon Compte</router-link></li>
-      <li v-if="isLoggedIn"><router-link to="/admin">Administration</router-link></li>
+      <li v-if="isAdmin"><router-link to="/admin">Administration</router-link></li>
       <li v-if="isLoggedIn" class="logout-item">
         <button @click="logout" class="logout-button">Se déconnecter</button>
       </li>
@@ -31,10 +31,11 @@ export default {
   setup() {
     const router = useRouter()
     const isLoggedIn = ref(false)
-
+    const isAdmin = ref(false)
     // Vérifier si l'utilisateur est connecté au chargement du composant
-    onMounted(() => {
-      checkLoginStatus()
+    onMounted(async () => {
+      checkLoginStatus();
+      await checkAdminStatus();
     })
 
     // Vérifier l'état de connexion
@@ -42,6 +43,16 @@ export default {
       isLoggedIn.value = AuthService.isLoggedIn()
     }
 
+    const checkAdminStatus = async () => {
+      try {
+        // Utiliser la méthode asynchrone qui fait une requête API
+        await AuthService.fetchUserRole(true); // true pour forcer le rafraîchissement
+        isAdmin.value = AuthService.isAdmin();
+      } catch (error) {
+        console.error("Erreur lors de la vérification du statut admin:", error);
+        isAdmin.value = false;
+      }
+    }
     // Fonction de déconnexion
     const logout = () => {
       AuthService.logout()
@@ -51,7 +62,8 @@ export default {
 
     return {
       isLoggedIn,
-      logout
+      logout,
+      isAdmin
     }
   }
 }

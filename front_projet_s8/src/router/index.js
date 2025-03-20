@@ -67,7 +67,9 @@ const routes = [
         name: 'Admin',
         component: AdminView,
         meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            requiresAdmin:true
+
         }
     },
     {
@@ -107,19 +109,42 @@ const router = createRouter({
 })
 
 // Garde de navigation pour protéger les routes
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     // Vérifie si la route nécessite une authentification
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth !== false)
+
+    // Vérifie si la route nécessite des droits d'administrateur
+    const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin)
 
     // Vérifie si l'utilisateur est connecté
     const isLoggedIn = AuthService.isLoggedIn()
 
-    // Si la route nécessite une authentification et que l'utilisateur n'est pas connecté, rediriger vers la page de connexion
+    // Si l'utilisateur n'est pas connecté et que la route nécessite une authentification
     if (requiresAuth && !isLoggedIn) {
         next('/login')
-    } else {
-        next()
+        return
     }
+
+    // Si la route nécessite des droits d'administrateur
+    if (requiresAdmin) {
+        try {
+            // Récupérer le rôle de l'utilisateur
+            const userRole = await AuthService.fetchUserRole()
+
+            // Si l'utilisateur n'est pas admin, rediriger vers la page d'accueil
+            if (userRole !== 'admin') {
+                next('/')
+                return
+            }
+        } catch (error) {
+            console.error("Erreur lors de la vérification du rôle admin:", error)
+            next('/')
+            return
+        }
+    }
+
+    // Dans tous les autres cas, permettre l'accès à la route
+    next()
 })
 
 export default router
