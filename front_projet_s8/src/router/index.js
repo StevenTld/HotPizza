@@ -5,10 +5,13 @@ import AuthService from '@/services/AuthService'
 import LoginView from '@/components/LoginView.vue'
 import RegisterView from '@/components/RegisterView.vue'
 import HomeView from '@/components/HomeView.vue'
-import IngredientListView from "@/components/IngredientListView.vue";
+import IngredientListView from "@/components/IngredientListView.vue"
 import Gestion_Ingredient from "@/components/Gestion_Ingredient.vue"
-import PizzaListView from "@/components/PizzaListView.vue";
-import AdminView from "@/components/AdminView.vue";
+import PizzaListView from "@/components/PizzaListView.vue"
+import AdminView from "@/components/AdminView.vue"
+import CartView from '@/components/CartView.vue'
+import CheckoutView from '@/components/CheckoutView.vue'
+import OrderHistoryView from '@/components/OrderHistoryView.vue'
 
 const routes = [
     {
@@ -28,11 +31,11 @@ const routes = [
         }
     },
     {
-      path: '/gestionIngredient',
-      name: 'GestionIngredient',
-      component: Gestion_Ingredient,
+        path: '/gestionIngredient',
+        name: 'GestionIngredient',
+        component: Gestion_Ingredient,
         meta: {
-          requiresAuth: true
+            requiresAuth: true
         }
     },
     {
@@ -63,6 +66,30 @@ const routes = [
         path: '/admin',
         name: 'Admin',
         component: AdminView,
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/panier',
+        name: 'Cart',
+        component: CartView,
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/checkout',
+        name: 'Checkout',
+        component: CheckoutView,
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/compte/commandes',
+        name: 'OrderHistory',
+        component: OrderHistoryView,
         meta: {
             requiresAuth: true
         }

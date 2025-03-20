@@ -10,18 +10,18 @@ router.post('/login', async (req, res, next) => {
     try {
         // Vérifier les identifiants avec le service
         const userData = await authService.verifyCredentials(req.body);
-        
+
         // Générer un token JWT
         const token = jwt.sign(
-            { 
+            {
                 userId: userData.userId,
                 email: userData.email,
-                role: userData.role || 'USER' 
-            }, 
-            process.env.JWT_SECRET, 
+                role: userData.role || 'USER'
+            },
+            process.env.JWT_SECRET,
             { expiresIn: process.env.JWT_EXPIRY || '24h' }
         );
-        
+
         // Renvoyer le token et les données utilisateur
         res.json({
             token,

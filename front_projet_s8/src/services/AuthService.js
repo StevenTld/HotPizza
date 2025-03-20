@@ -16,8 +16,20 @@ class AuthService {
 
     // Inscription
     async register(user) {
-        const response = await axios.post(`${API_URL}/register`, user)
-        return response.data
+        console.log("Données d'inscription envoyées:", user);
+        try {
+            const response = await axios.post(`${API_URL}/register`, user);
+            console.log("Réponse d'inscription:", response.data);
+            return response.data;
+        } catch (error) {
+            console.error("Erreur d'inscription détaillée:", {
+                status: error.response?.status,
+                statusText: error.response?.statusText,
+                data: error.response?.data,
+                headers: error.response?.headers
+            });
+            throw error;
+        }
     }
 
     // Déconnexion
