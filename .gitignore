@@ -6,3 +6,4 @@ Order_API/data/
 
 # Ignorer les fichiers workspace.xml
 AppNode/.idea/workspace.xml
+Ingredient_API/data/
