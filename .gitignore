@@ -1,22 +1,8 @@
-# Ignorer les fichiers de logs de MySQL/MariaDB
-/Ingredient_API/data/
-/Auth/data/
-# Ignorer les fichiers des bases de données en général
-*.sql
-*.log
+# Ignorer tous les répertoires data des API
+*/data/
+Ingredient_API/data/
+Pizza_API/data/
+Order_API/data/
 
-# Ignorer les dossiers liés à Docker
-**/data/
-
-# Ignorer les fichiers compilés et dépendances Java
-target/
-*.class
-*.jar
-
-# Ignorer les fichiers Node.js pour Vue
-node_modules/
-dist/
-
-# Ignorer les fichiers système
-.DS_Store
-.env
+# Ignorer les fichiers workspace.xml
+AppNode/.idea/workspace.xml
