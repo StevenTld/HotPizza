@@ -131,7 +131,41 @@
         </div>
       </div>
     </div>
+    <div class="modal-comments">
+      <h4>Commentaires</h4>
 
+      <!-- Note moyenne -->
+      <div v-if="averageRating !== null" class="average-rating">
+        Note moyenne :
+        <span>{{ averageRating.toFixed(1) }} / 5</span>
+      </div>
+
+      <!-- Liste des commentaires -->
+      <div v-if="comments.length" class="comments-list">
+        <div v-for="comment in comments" :key="comment.id" class="comment-item">
+          <div class="comment-header">
+            <span class="comment-user">{{ comment.userId }}</span>
+            <span class="comment-rating">{{ comment.rating }}/5</span>
+          </div>
+          <p class="comment-content">{{ comment.content }}</p>
+          <small class="comment-date">{{ formatCommentDate(comment.createdAt) }}</small>
+        </div>
+      </div>
+      <p v-else class="no-comments">Aucun commentaire pour cette pizza</p>
+
+      <!-- Formulaire d'ajout de commentaire -->
+      <div class="add-comment-form">
+        <h5>Ajouter un commentaire</h5>
+        <select v-model="newComment.rating">
+          <option v-for="n in 5" :key="n" :value="n">{{ n }}/5</option>
+        </select>
+        <textarea
+            v-model="newComment.content"
+            placeholder="Votre commentaire..."
+        ></textarea>
+        <button @click="submitComment">Envoyer</button>
+      </div>
+    </div>
     <!-- Toast notification -->
     <div v-if="showToast" class="toast" :class="{ 'success': toastType === 'success', 'error': toastType === 'error' }">
       {{ toastMessage }}
@@ -144,7 +178,7 @@ import PizzaService from '@/services/PizzaService';
 import IngredientService from '@/services/IngredientService';
 import CartService from '@/services/CartService';
 import AuthService from '@/services/AuthService';
-import { ref, computed, reactive, onMounted } from 'vue';
+import {ref, computed, reactive, onMounted, watch} from 'vue';
 import { useRouter } from 'vue-router';
 
 export default {
@@ -170,6 +204,60 @@ export default {
     const toastMessage = ref('');
     const toastType = ref('success');
 
+    const comments = ref([])
+    const averageRating = ref(null)
+    const newComment = reactive({
+      rating: 5,
+      content: ''
+    })
+
+    // Charger les commentaires quand la pizza est sélectionnée
+    const loadPizzaComments = async () => {
+      try {
+        comments.value = await PizzaService.getPizzaComments(selectedPizza.value.id)
+        averageRating.value = await PizzaService.getPizzaAverageRating(selectedPizza.value.id)
+      } catch (error) {
+        console.error('Erreur lors du chargement des commentaires', error)
+        displayToast('Erreur lors du chargement des commentaires', 'error')
+      }
+    }
+
+    // Soumettre un nouveau commentaire
+    const submitComment = async () => {
+      if (!AuthService.isLoggedIn()) {
+        router.push('/login')
+        return
+      }
+
+      try {
+        await PizzaService.addPizzaComment(selectedPizza.value.id, newComment)
+        displayToast('Commentaire ajouté avec succès', 'success')
+
+        // Réinitialiser le formulaire et recharger les commentaires
+        newComment.content = ''
+        newComment.rating = 5
+        await loadPizzaComments()
+      } catch (error) {
+        console.error('Erreur lors de l\'ajout du commentaire', error)
+        displayToast('Erreur lors de l\'ajout du commentaire', 'error')
+      }
+    }
+
+    // Formater la date du commentaire
+    const formatCommentDate = (dateString) => {
+      return new Date(dateString).toLocaleDateString('fr-FR', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      })
+    }
+
+    // Appeler loadPizzaComments quand le modal est ouvert
+    watch(showModal, (newValue) => {
+      if (newValue) {
+        loadPizzaComments()
+      }
+    })
     // Fetch data
     const fetchPizzas = async () => {
       try {
@@ -380,13 +468,76 @@ export default {
       increasePizzaQuantity,
       decreasePizzaQuantity,
       calculateTotal,
-      addCustomPizzaToCart
+      addCustomPizzaToCart,
+      comments,
+      averageRating,
+      newComment,
+      submitComment,
+      formatCommentDate
     };
   }
 };
 </script>
 
 <style scoped>
+
+/* Styles pour les commentaires */
+.modal-comments {
+  margin-top: 20px;
+}
+
+.average-rating {
+  text-align: center;
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.comments-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.comment-item {
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.comment-user {
+  font-weight: bold;
+}
+
+.comment-rating {
+  color: #e74c3c;
+}
+
+.comment-content {
+  margin-bottom: 5px;
+}
+
+.comment-date {
+  color: #666;
+}
+
+.no-comments {
+  text-align: center;
+  color: #999;
+}
+
+.add-comment-form {
+  margin-top: 20px;
+}
+
+.add-comment-form textarea {
+  width: 100%;
+  min-height: 100px;
+  margin-bottom: 10px;
+}
 .list-pizza-container {
   max-width: 1200px;
   margin: 0 auto;

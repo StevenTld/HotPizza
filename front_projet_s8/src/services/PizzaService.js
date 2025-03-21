@@ -1,6 +1,7 @@
 // src/services/PizzaService.js
 
 import axios from 'axios'
+import AuthService from "@/services/AuthService";
 
 const API_URL = 'http://localhost:3000/api/pizza'
 
@@ -56,6 +57,55 @@ class PizzaService {
             return response.data
         } catch (error) {
             console.error(`Erreur lors de la suppression de la pizza avec l'ID ${id}:`, error)
+            throw error
+        }
+    }
+
+    // Nouvelle méthode pour récupérer les commentaires d'une pizza
+    async getPizzaComments(pizzaId) {
+        try {
+            const response = await axios.get(`${API_URL}/pizza/${pizzaId}`, {
+                headers: {
+                    'Authorization': `Bearer ${AuthService.getToken()}`
+                }
+            })
+            return response.data
+        } catch (error) {
+            console.error(`Erreur lors de la récupération des commentaires pour la pizza ${pizzaId}:`, error)
+            throw error
+        }
+    }
+
+    // Nouvelle méthode pour récupérer la note moyenne d'une pizza
+    async getPizzaAverageRating(pizzaId) {
+        try {
+            const response = await axios.get(`${API_URL}/pizza/${pizzaId}/rating`, {
+                headers: {
+                    'Authorization': `Bearer ${AuthService.getToken()}`
+                }
+            })
+            return response.data
+        } catch (error) {
+            console.error(`Erreur lors de la récupération de la note moyenne pour la pizza ${pizzaId}:`, error)
+            throw error
+        }
+    }
+
+    // Nouvelle méthode pour ajouter un commentaire
+    async addPizzaComment(pizzaId, commentData) {
+        try {
+            const response = await axios.post(API_URL, {
+                pizzaId: pizzaId,
+                content: commentData.content,
+                rating: commentData.rating
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${AuthService.getToken()}`
+                }
+            })
+            return response.data
+        } catch (error) {
+            console.error(`Erreur lors de l'ajout d'un commentaire pour la pizza ${pizzaId}:`, error)
             throw error
         }
     }

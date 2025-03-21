@@ -9,6 +9,15 @@
     ports:
       - "7072:3306"
 
+  mongodb:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_DATABASE: hotpizzadb
+    volumes:
+      - ./mongodb_data:/data/db
+    ports:
+      - "7093:27017"
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     environment:
@@ -18,3 +27,12 @@
       - "7082:80"
     depends_on:
       - mariadb
+
+  mongo-express:
+    image: mongo-express:latest
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongodb
+    ports:
+      - "7183:8081"
+    depends_on:
+      - mongodb

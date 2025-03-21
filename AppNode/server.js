@@ -8,6 +8,7 @@ const ingredientsRoutes = require('./routes/ingredients.routes');
 const pizzaRoutes = require('./routes/pizza.routes');
 const orderRoutes = require('./routes/order.routes');
 const cartRoutes = require('./routes/cart.routes');
+const commentRoutes = require('./routes/comment.routes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -27,6 +28,7 @@ app.use('/api/ingredients', ingredientsRoutes);
 app.use('/api/pizza', pizzaRoutes);
 app.use('/api/order', orderRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/api/comment', commentRoutes);
 // Plus besoin de servir des fichiers statiques ni de route par défaut
 
 // Gestion des erreurs globale
