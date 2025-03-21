@@ -1,0 +1,138 @@
+openapi: 3.0.3
+info:
+  title: API de Gestion des Chiens
+  description: |
+    API REST permettant la gestion des chiens dans le système.
+    Cette API permet de créer, lire, mettre à jour et supprimer des informations sur les chiens.
+  version: 1.0.0
+  contact:
+    name: Support API
+    email: support@example.com
+
+servers:
+  - url: http://localhost:8080
+    description: Serveur de développement local
+
+tags:
+  - name: dogs
+    description: Opérations liées à la gestion des chiens
+
+paths:
+  /dogs:
+    get:
+      tags:
+        - dogs
+      summary: Récupère tous les chiens
+      description: Retourne la liste complète des chiens enregistrés dans le système
+      operationId: getAllDogs
+      responses:
+        '200':
+          description: Liste des chiens récupérée avec succès
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DogDto'
+        '500':
+          description: Erreur serveur interne
+
+    post:
+      tags:
+        - dogs
+      summary: Crée un nouveau chien
+      description: Ajoute un nouveau chien dans le système
+      operationId: createDog
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DogDto'
+      responses:
+        '201':
+          description: Chien créé avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DogDto'
+        '400':
+          description: Données invalides
+        '500':
+          description: Erreur serveur interne
+
+  /dogs/{id}:
+    get:
+      tags:
+        - dogs
+      summary: Récupère un chien par son ID
+      description: Retourne les détails d'un chien spécifique
+      operationId: getDogById
+      parameters:
+        - name: id
+          in: path
+          description: ID du chien à récupérer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Chien trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DogDto'
+        '404':
+          description: Chien non trouvé
+        '500':
+          description: Erreur serveur interne
+
+    delete:
+      tags:
+        - dogs
+      summary: Supprime un chien
+      description: Supprime un chien du système par son ID
+      operationId: deleteDog
+      parameters:
+        - name: id
+          in: path
+          description: ID du chien à supprimer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Chien supprimé avec succès
+          content:
+            application/json:
+              schema:
+                type: boolean
+        '404':
+          description: Chien non trouvé
+        '500':
+          description: Erreur serveur interne
+
+components:
+  schemas:
+    DogDto:
+      type: object
+      description: Représentation d'un chien dans le système
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Identifiant unique du chien
+          example: 1
+        name:
+          type: string
+          description: Nom du chien
+          example: "Rex"
+        race:
+          type: string
+          description: Race du chien
+          example: "Berger Allemand"
+      required:
+        - name
+        - race 
