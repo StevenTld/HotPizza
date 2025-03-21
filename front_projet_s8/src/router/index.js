@@ -12,6 +12,8 @@ import AdminView from "@/components/AdminView.vue"
 import CartView from '@/components/CartView.vue'
 import CheckoutView from '@/components/CheckoutView.vue'
 import OrderHistoryView from '@/components/OrderHistoryView.vue'
+import UserAccountView from '@/components/UserAccountView.vue'
+import AdminAccountView from '@/components/AdminAccountView.vue'
 
 const routes = [
     {
@@ -68,8 +70,7 @@ const routes = [
         component: AdminView,
         meta: {
             requiresAuth: true,
-            requiresAdmin:true
-
+            requiresAdmin: true
         }
     },
     {
@@ -94,6 +95,24 @@ const routes = [
         component: OrderHistoryView,
         meta: {
             requiresAuth: true
+        }
+    },
+    // Nouvelles routes pour les comptes utilisateur et admin
+    {
+        path: '/compte',
+        name: 'UserAccount',
+        component: UserAccountView,
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/compte/admin',
+        name: 'AdminAccount',
+        component: AdminAccountView,
+        meta: {
+            requiresAuth: true,
+            requiresAdmin: true
         }
     },
     // Ajoutez ici toutes vos autres routes

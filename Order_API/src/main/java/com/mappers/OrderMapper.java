@@ -18,7 +18,9 @@ public class OrderMapper {
     public Order toEntity(CreateOrderDto createOrderDto) {
         Order order = new Order();
         order.setUserId(createOrderDto.getUserId());
-
+        order.setStatus("En cours");
+        order.setTotal(createOrderDto.getTotal());
+        order.setName(createOrderDto.getName());
         // Vérifier que pizzaItems n'est pas null
         if (createOrderDto.getPizzaItems() != null) {
             for (PizzaItemDto pizzaItem : createOrderDto.getPizzaItems()) {
@@ -48,8 +50,10 @@ public class OrderMapper {
         // Copier les propriétés simples
         dto.setId(order.getId());
         dto.setUserId(order.getUserId());
-
-
+        dto.setCreatedAt(order.getCreatedAt());
+        dto.setStatus(order.getStatus());
+        dto.setTotal(order.getTotal());
+        dto.setName(order.getName());
         // Convertir la map des pizzas en liste d'objets PizzaItemDto
         List<PizzaItemDto> pizzaItems = new ArrayList<>();
 

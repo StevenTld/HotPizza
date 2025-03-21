@@ -4,12 +4,10 @@
       <h1>Bienvenue chez HotPizza</h1>
       <p>Découvrez nos délicieuses pizzas artisanales</p>
       <div class="cta-buttons">
-        <button class="btn-primary">Voir nos pizzas</button>
-        <button class="btn-secondary">Commander maintenant</button>
+        <router-link to="/pizzas" class="btn-primary">Voir nos pizzas</router-link>
+        <router-link to="/panier" class="btn-secondary">Commander maintenant</router-link>
       </div>
     </div>
-
-
   </div>
 </template>
 

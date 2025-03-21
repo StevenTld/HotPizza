@@ -77,5 +77,19 @@ public class OrderController {
         }
     }
 
+    @PutMapping("/{id}/status")
+    public ResponseEntity<OrderDto> updateOrderStatus(@PathVariable Long id, @RequestParam String status) {
+        try {
+            Long userId = UserUtil.getCurrentUserId();
+            OrderDto updatedOrder = orderService.updateOrderStatus(id, status, userId);
+            return ResponseEntity.ok(updatedOrder);
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 
 }

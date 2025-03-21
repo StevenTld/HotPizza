@@ -10,11 +10,6 @@
       <div class="step-connector"></div>
       <div class="step" :class="{ 'active': currentStep === 2, 'completed': currentStep > 2 }">
         <div class="step-number">2</div>
-        <div class="step-label">Livraison</div>
-      </div>
-      <div class="step-connector"></div>
-      <div class="step" :class="{ 'active': currentStep === 3, 'completed': currentStep > 3 }">
-        <div class="step-number">3</div>
         <div class="step-label">Paiement</div>
       </div>
     </div>
@@ -57,17 +52,34 @@
 
             <div class="price-summary">
               <div class="summary-line">
-                <span>Sous-total:</span>
+                <span>Total:</span>
                 <span>{{ formatPrice(calculateSubtotal()) }} €</span>
               </div>
-              <div class="summary-line">
-                <span>Frais de livraison:</span>
-                <span>{{ formatPrice(deliveryFee) }} €</span>
-              </div>
-              <div class="summary-line total">
-                <span>Total:</span>
-                <span>{{ formatPrice(calculateSubtotal() + deliveryFee) }} €</span>
-              </div>
+            </div>
+
+            <div class="pickup-info">
+              <h4>Information Click & Collect</h4>
+              <p>Votre commande sera disponible pour retrait en magasin dans les 30 minutes après confirmation.</p>
+              <p>Adresse: 12 rue de BoneMeal, 29200 Brest</p>
+            </div>
+
+            <div class="form-group">
+              <label for="pickupTime">Heure de retrait souhaitée</label>
+              <select id="pickupTime" v-model="pickupInfo.time" required>
+                <option v-for="time in availablePickupTimes" :key="time" :value="time">
+                  {{ time }}
+                </option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="comments">Instructions spéciales (optionnel)</label>
+              <textarea
+                  id="comments"
+                  v-model="pickupInfo.comments"
+                  placeholder="Instructions particulières..."
+                  rows="3"
+              ></textarea>
             </div>
 
             <div class="step-actions">
@@ -78,78 +90,8 @@
         </div>
       </div>
 
-      <!-- Étape 2: Informations de livraison -->
+      <!-- Étape 2: Paiement -->
       <div v-if="currentStep === 2" class="step-content">
-        <div class="delivery-info">
-          <h3>Informations de livraison</h3>
-
-          <form @submit.prevent="goToNextStep" class="delivery-form">
-            <div class="form-group">
-              <label for="address">Adresse de livraison</label>
-              <input
-                  type="text"
-                  id="address"
-                  v-model="deliveryInfo.address"
-                  placeholder="Adresse"
-                  required
-              />
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="zipCode">Code postal</label>
-                <input
-                    type="text"
-                    id="zipCode"
-                    v-model="deliveryInfo.zipCode"
-                    placeholder="Code postal"
-                    required
-                />
-              </div>
-
-              <div class="form-group">
-                <label for="city">Ville</label>
-                <input
-                    type="text"
-                    id="city"
-                    v-model="deliveryInfo.city"
-                    placeholder="Ville"
-                    required
-                />
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="phone">Numéro de téléphone</label>
-              <input
-                  type="tel"
-                  id="phone"
-                  v-model="deliveryInfo.phone"
-                  placeholder="Téléphone"
-                  required
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="comments">Instructions spéciales (optionnel)</label>
-              <textarea
-                  id="comments"
-                  v-model="deliveryInfo.comments"
-                  placeholder="Instructions pour la livraison..."
-                  rows="3"
-              ></textarea>
-            </div>
-
-            <div class="step-actions">
-              <button type="button" class="btn-back" @click="goToPreviousStep">Retour</button>
-              <button type="submit" class="btn-next">Continuer</button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <!-- Étape 3: Paiement -->
-      <div v-if="currentStep === 3" class="step-content">
         <div class="payment-info">
           <h3>Méthode de paiement</h3>
 
@@ -175,7 +117,7 @@
                 <input type="radio" id="cash" name="paymentMethod" value="cash" v-model="paymentMethod" />
                 <label for="cash">
                   <span class="payment-icon">💶</span>
-                  <span>Espèces à la livraison</span>
+                  <span>Espèces au retrait</span>
                 </label>
               </div>
             </div>
@@ -228,10 +170,18 @@
               </div>
             </div>
 
+            <div class="order-summary-review">
+              <h4>Récapitulatif</h4>
+              <div class="summary-details">
+                <p><strong>Heure de retrait:</strong> {{ pickupInfo.time }}</p>
+                <p v-if="pickupInfo.comments"><strong>Instructions:</strong> {{ pickupInfo.comments }}</p>
+              </div>
+            </div>
+
             <div class="order-total">
               <div class="total-line">
                 <span>Total à payer:</span>
-                <span class="total-amount">{{ formatPrice(calculateSubtotal() + deliveryFee) }} €</span>
+                <span class="total-amount">{{ formatPrice(calculateSubtotal()) }} €</span>
               </div>
             </div>
 
@@ -251,7 +201,11 @@
         <h3>Commande confirmée !</h3>
         <p>Votre commande a été passée avec succès.</p>
         <p class="order-number">Numéro de commande: <strong>{{ orderNumber }}</strong></p>
-        <p>Un récapitulatif a été envoyé à votre adresse e-mail.</p>
+        <div class="pickup-confirmation">
+          <p><strong>À récupérer à:</strong> {{ pickupInfo.time }}</p>
+          <p>Adresse: 12 rue de BoneMeal</p>
+          <p>Un récapitulatif a été envoyé à votre adresse e-mail.</p>
+        </div>
         <div class="confirmation-actions">
           <router-link to="/" class="btn-primary">Retour à l'accueil</router-link>
           <router-link to="/compte/commandes" class="btn-secondary">Voir mes commandes</router-link>
@@ -266,8 +220,34 @@ import CartService from '@/services/CartService';
 import OrderService from '@/services/OrderService';
 import PizzaService from '@/services/PizzaService';
 import IngredientService from '@/services/IngredientService';
-import { ref, onMounted } from 'vue';
+import AuthService from '@/services/AuthService';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
+const currentUser = ref(null);
+
+// 1. Dans la méthode loadUserInfo, ajoutez des logs détaillés:
+const loadUserInfo = async () => {
+  try {
+    console.log('Tentative de récupération des informations utilisateur...');
+    // Récupérer l'utilisateur connecté
+    const userData = await AuthService.getCurrentUser();
+    console.log('Réponse brute de getCurrentUser:', userData);
+
+    if (userData) {
+      currentUser.value = userData;
+      console.log('Informations utilisateur chargées avec succès:', {
+        id: userData._id || userData.userId,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        email: userData.email
+      });
+    } else {
+      console.warn('Aucune donnée utilisateur reçue');
+    }
+  } catch (error) {
+    console.error('Erreur lors du chargement des informations utilisateur:', error);
+  }
+};
 
 export default {
   name: 'CheckoutView',
@@ -277,18 +257,75 @@ export default {
     const cart = ref(null);
     const cartItems = ref([]);
     const currentStep = ref(1);
-    const deliveryFee = 2.50; // Frais de livraison fixes
     const orderPlaced = ref(false);
     const orderNumber = ref('');
     const isProcessing = ref(false);
 
-    // Informations de livraison
-    const deliveryInfo = ref({
-      address: '',
-      zipCode: '',
-      city: '',
-      phone: '',
+    // Informations de retrait
+    const pickupInfo = ref({
+      time: '',
       comments: ''
+    });
+
+    // Génération des horaires de retrait disponibles
+    const availablePickupTimes = computed(() => {
+      const times = [];
+      const now = new Date();
+      const currentHour = now.getHours();
+      const currentMinute = now.getMinutes();
+
+      // Supposons que le magasin soit ouvert de 11h à 22h
+      const storeOpenHour = 11;
+      const storeCloseHour = 22;
+
+      // Commençons à la prochaine demi-heure disponible
+      let startHour = currentHour;
+      let startMinute = currentMinute < 30 ? 30 : 0;
+
+      if (currentMinute >= 30) {
+        startHour += 1;
+      }
+
+      // Ajoutons 30 minutes pour la préparation
+      if (startMinute === 30) {
+        startHour += 1;
+        startMinute = 0;
+      } else {
+        startMinute = 30;
+      }
+
+      // Si nous sommes en dehors des heures d'ouverture, commençons demain
+      const tomorrow = new Date(now);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const isNextDay = startHour >= storeCloseHour || startHour < storeOpenHour;
+
+      // Générer les horaires disponibles
+      const day = isNextDay ? tomorrow : now;
+      const dayStr = day.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+
+      const startTimeHour = isNextDay ? storeOpenHour : startHour;
+      const endTimeHour = storeCloseHour;
+
+      for (let h = startTimeHour; h < endTimeHour; h++) {
+        for (let m of [0, 30]) {
+          // Ignorer la première plage si c'est aujourd'hui et nous commençons à la demi-heure
+          if (h === startTimeHour && m < startMinute && !isNextDay) continue;
+
+          const hour = h.toString().padStart(2, '0');
+          const minute = m.toString().padStart(2, '0');
+
+          times.push(`${dayStr} à ${hour}:${minute}`);
+        }
+      }
+
+      return times;
+    });
+
+    // Définir l'heure de retrait par défaut
+    onMounted(() => {
+      if (availablePickupTimes.value.length > 0) {
+        pickupInfo.value.time = availablePickupTimes.value[0];
+      }
     });
 
     // Méthode de paiement
@@ -308,7 +345,8 @@ export default {
         loading.value = true;
         cart.value = await CartService.getUserCart();
         cartItems.value = cart.value.pizzaItems || [];
-
+        // Charger les informations de l'utilisateur
+        await loadUserInfo();
         // Charger les détails des pizzas
         await loadPizzaDetails();
 
@@ -386,7 +424,7 @@ export default {
 
     // Passer à l'étape suivante
     const goToNextStep = () => {
-      if (currentStep.value < 3) {
+      if (currentStep.value < 2) {
         currentStep.value += 1;
         window.scrollTo(0, 0);
       }
@@ -422,15 +460,22 @@ export default {
         // Créer l'objet de commande
         const orderData = {
           userId: null, // Sera rempli par le backend
-          pizzaItems: cartItems.value.map(item => ({
+          pizzaItems: cartItems.value.map(item => ({  // Utilisez "pizzaItems" au lieu de "orderItems"
             pizzaId: item.pizzaId,
             quantity: item.quantity,
             extraIngredients: item.extraIngredients || []
           })),
-          deliveryInfo: deliveryInfo.value,
+          subtotal: calculateSubtotal(),
+          total: calculateSubtotal(),
+          name: currentUser.value ?
+              `${currentUser.value.firstName || ''} ${currentUser.value.lastName || ''}`.trim() :
+              null,
+          // Les autres champs peuvent rester, mais le backend ne les utilisera pas s'ils ne sont pas dans le DTO
+          pickupInfo: pickupInfo.value,
           paymentMethod: paymentMethod.value,
           paymentInfo: paymentMethod.value === 'card' ? paymentInfo.value : null,
-          total: calculateSubtotal() + deliveryFee
+          orderType: 'clickAndCollect',
+          status: 'pending'
         };
 
         // Envoyer la commande au serveur
@@ -438,6 +483,11 @@ export default {
 
         // Vider le panier après commande réussie
         await CartService.clearCart();
+
+        // Mettre à jour le compteur du panier dans la navbar si la fonction existe
+        if (window.updateNavbarCart) {
+          window.updateNavbarCart();
+        }
 
         // Afficher la confirmation de commande
         orderNumber.value = response.id || 'ORDER-' + Math.floor(Math.random() * 10000);
@@ -464,13 +514,14 @@ export default {
       loading,
       cartItems,
       currentStep,
-      deliveryFee,
-      deliveryInfo,
+      pickupInfo,
+      availablePickupTimes,
       paymentMethod,
       paymentInfo,
       orderPlaced,
       orderNumber,
       isProcessing,
+      currentUser,
       calculateSubtotal,
       formatPrice,
       goToNextStep,
@@ -594,7 +645,6 @@ export default {
 
 /* Récapitulatif de la commande */
 .order-summary h3,
-.delivery-info h3,
 .payment-info h3 {
   font-size: 20px;
   color: #333;
@@ -691,6 +741,25 @@ export default {
   margin-top: 10px;
 }
 
+.pickup-info {
+  margin-top: 25px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  border-left: 4px solid #00c3ff;
+}
+
+.pickup-info h4 {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.pickup-info p {
+  margin-bottom: 5px;
+  color: #666;
+}
+
 .step-actions {
   display: flex;
   justify-content: space-between;
@@ -768,12 +837,7 @@ export default {
   background-color: #f0f9ff;
 }
 
-/* Formulaire de livraison */
-.delivery-form,
-.payment-form {
-  max-width: 100%;
-}
-
+/* Formulaire */
 .form-group {
   margin-bottom: 20px;
 }
@@ -795,7 +859,8 @@ label {
 }
 
 input,
-textarea {
+textarea,
+select {
   width: 100%;
   padding: 12px;
   border: 1px solid #ddd;
@@ -805,7 +870,8 @@ textarea {
 }
 
 input:focus,
-textarea:focus {
+textarea:focus,
+select:focus {
   border-color: #00c3ff;
   outline: none;
 }
@@ -856,6 +922,25 @@ textarea:focus {
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 4px;
+}
+
+.order-summary-review {
+  margin-top: 25px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  border-left: 4px solid #27ae60;
+}
+
+.order-summary-review h4 {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.summary-details p {
+  margin-bottom: 5px;
+  color: #666;
 }
 
 .order-total {
@@ -909,6 +994,21 @@ textarea:focus {
   background-color: #f9f9f9;
   border-radius: 4px;
   font-size: 18px;
+}
+
+.pickup-confirmation {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  border-left: 4px solid #27ae60;
+  text-align: left;
+  width: 100%;
+  max-width: 400px;
+}
+
+.pickup-confirmation p {
+  margin-bottom: 8px;
 }
 
 .confirmation-actions {

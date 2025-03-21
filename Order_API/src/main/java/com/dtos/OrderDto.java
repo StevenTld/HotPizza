@@ -12,6 +12,9 @@ public class OrderDto {
     private Long id;
     private Long userId;
     private List<PizzaItemDto> pizzaItems;
-
+    private Date createdAt;
+    private String status;
+    private String name;
+    private Double total;
 
 }

@@ -91,4 +91,14 @@ public class OrderServiceImpl {
         orderRepository.deleteById(id);
 
     }
+
+    public OrderDto updateOrderStatus(Long id, String status, Long userId) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Commande non trouvée avec l'ID: " + id));
+        if(!order.getUserId().equals(userId)){
+            throw new SecurityException("Vous n'êtes pas autorisé à accéder à cette commande");
+        }
+        order.setStatus(status);
+        return orderMapper.toDto(order);
+    }
 }

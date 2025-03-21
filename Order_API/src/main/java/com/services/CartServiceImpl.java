@@ -5,8 +5,11 @@ import com.entities.Cart;
 import com.mappers.CartMapper;
 import com.repositories.CartRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.NonUniqueResultException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service("CartService")
 @Transactional
@@ -21,16 +24,37 @@ public class CartServiceImpl {
 
     // Récupérer ou créer le panier d'un utilisateur
     public CartDto getOrCreateCartForUser(Long userId) {
-        Cart cart = cartRepository.findByUserId(userId);
+        try {
+            // Essayer de récupérer le panier unique
+            Cart cart = cartRepository.findByUserId(userId);
+            return cartMapper.toDto(cart);
+        } catch (NonUniqueResultException e) {
+            // Si plusieurs paniers existent, utiliser findAllByUserId et prendre le premier
+            List<Cart> carts = cartRepository.findAllByUserId(userId);
+            if (!carts.isEmpty()) {
+                // Utiliser le premier panier trouvé
+                Cart cart = carts.get(0);
 
-        // Si l'utilisateur n'a pas encore de panier, en créer un
-        if (cart == null) {
-            cart = new Cart();
-            cart.setUserId(userId);
-            cart = cartRepository.save(cart);
+                // Optionnel: supprimer les autres paniers
+                for (int i = 1; i < carts.size(); i++) {
+                    cartRepository.delete(carts.get(i));
+                }
+
+                return cartMapper.toDto(cart);
+            } else {
+                // Cas improbable mais géré: aucun panier trouvé malgré l'exception
+                Cart newCart = new Cart();
+                newCart.setUserId(userId);
+                newCart = cartRepository.save(newCart);
+                return cartMapper.toDto(newCart);
+            }
+        } catch (Exception e) {
+            // Si aucun panier n'existe (ou autre erreur), en créer un nouveau
+            Cart newCart = new Cart();
+            newCart.setUserId(userId);
+            newCart = cartRepository.save(newCart);
+            return cartMapper.toDto(newCart);
         }
-
-        return cartMapper.toDto(cart);
     }
 
     // Ajouter une pizza au panier de l'utilisateur

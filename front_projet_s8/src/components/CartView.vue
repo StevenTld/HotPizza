@@ -60,13 +60,9 @@
           <span>Sous-total:</span>
           <span>{{ formatPrice(calculateSubtotal()) }} €</span>
         </div>
-        <div class="summary-line delivery-fee">
-          <span>Frais de livraison:</span>
-          <span>{{ formatPrice(deliveryFee) }} €</span>
-        </div>
         <div class="summary-line total">
           <span>Total:</span>
-          <span>{{ formatPrice(calculateSubtotal() + deliveryFee) }} €</span>
+          <span>{{ formatPrice(calculateSubtotal()) }} €</span>
         </div>
         <div class="cart-actions">
           <button class="btn-clear-cart" @click="confirmClearCart">Vider le panier</button>

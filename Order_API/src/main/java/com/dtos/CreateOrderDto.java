@@ -7,5 +7,6 @@ import java.util.List;
 public class CreateOrderDto {
     private Long userId;
     private List<PizzaItemDto> pizzaItems;
-
+    private Double total;
+    private String name;
 }

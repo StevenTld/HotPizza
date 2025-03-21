@@ -37,17 +37,20 @@ router.post('/', async (req, res, next) => {
     }
 });
 
-// Mettre à jour le statut d'une commande
+// Dans votre route
 router.put('/:id/status', async (req, res, next) => {
     try {
         const { status } = req.query;
+        console.log('Statut reçu:', status); // Log du statut
+
         if (!status) {
             return res.status(400).json({ message: 'Le statut est requis' });
         }
-        
+       
         const updatedOrder = await orderService.updateOrderStatus(req.params.id, status, req.user.userId);
         res.json(updatedOrder);
     } catch (error) {
+        console.error('Erreur détaillée:', error.response ? error.response.data : error.message);
         next(error);
     }
 });

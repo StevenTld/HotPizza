@@ -1,15 +1,20 @@
 <template>
   <nav class="navbar">
     <div class="logo">
-      <a href="#" style="color: white; text-decoration: none;">HotPizza</a>
+      <a href="/" style="color: white; text-decoration: none;">HotPizza</a>
     </div>
 
     <ul class="nav-links">
       <li><router-link to="/" class="active">Accueil</router-link></li>
       <li><router-link to="/pizzas">Nos Pizzas</router-link></li>
       <li><router-link to="/ingredients">Nos Ingrédients</router-link></li>
-      <li ><router-link to="/panier">Mon Panier</router-link></li>
-      <li v-if="isLoggedIn"><router-link to="/compte">Mon Compte</router-link></li>
+      <li>
+        <router-link to="/panier" class="cart-icon-link">
+          <i class="fas fa-shopping-cart"></i>
+          <span v-if="cartItemCount > 0" class="cart-badge">{{ cartItemCount }}</span>
+        </router-link>
+      </li>
+      <li v-if="isLoggedIn"><router-link :to="isAdmin ? '/compte/admin' : '/compte'">Mon Compte</router-link></li>
       <li v-if="isAdmin"><router-link to="/admin">Administration</router-link></li>
       <li v-if="isLoggedIn" class="logout-item">
         <button @click="logout" class="logout-button">Se déconnecter</button>
@@ -23,7 +28,8 @@
 
 <script>
 import AuthService from '@/services/AuthService'
-import { ref, onMounted } from 'vue'
+import CartService from '@/services/CartService'
+import { ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 export default {
@@ -32,11 +38,25 @@ export default {
     const router = useRouter()
     const isLoggedIn = ref(false)
     const isAdmin = ref(false)
+    const cartItemCount = ref(0)
+
     // Vérifier si l'utilisateur est connecté au chargement du composant
     onMounted(async () => {
       checkLoginStatus();
       await checkAdminStatus();
+      if (isLoggedIn.value) {
+        await updateCartCount();
+      }
     })
+
+    // Observer les changements d'état de connexion
+    watch(isLoggedIn, async (newValue) => {
+      if (newValue) {
+        await updateCartCount();
+      } else {
+        cartItemCount.value = 0;
+      }
+    });
 
     // Vérifier l'état de connexion
     const checkLoginStatus = () => {
@@ -53,17 +73,43 @@ export default {
         isAdmin.value = false;
       }
     }
+
+    // Fonction pour mettre à jour le compteur du panier
+    const updateCartCount = async () => {
+      try {
+        const cart = await CartService.getUserCart();
+        if (cart && cart.items) {
+          // Calcule le nombre total d'articles dans le panier
+          cartItemCount.value = cart.items.reduce((total, item) => total + (item.quantity || 1), 0);
+        } else {
+          cartItemCount.value = 0;
+        }
+      } catch (error) {
+        console.error("Erreur lors de la récupération du panier:", error);
+        cartItemCount.value = 0;
+      }
+    }
+
     // Fonction de déconnexion
     const logout = () => {
       AuthService.logout()
       isLoggedIn.value = false
-      router.push('/login')
+      isAdmin.value = false
+      cartItemCount.value = 0
+      router.push('/')
+    }
+
+    // Exposer les méthodes pour permettre une mise à jour depuis d'autres composants
+    if (window) {
+      window.updateNavbarCart = updateCartCount;
     }
 
     return {
       isLoggedIn,
       logout,
-      isAdmin
+      isAdmin,
+      cartItemCount,
+      updateCartCount
     }
   }
 }
@@ -167,5 +213,48 @@ body {
   color: #333;
   padding: 0 10px;
   cursor: pointer;
+}
+
+/* Styles pour l'icône du panier */
+.cart-icon-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  padding: 5px;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #e74c3c;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+/* Animation du badge lorsqu'il change */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.cart-badge {
+  animation: pulse 0.3s;
 }
 </style>

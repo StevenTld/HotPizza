@@ -66,15 +66,20 @@ const createOrder = async (orderData, userId) => {
 /**
  * Met à jour le statut d'une commande
  */
+// Dans votre service
 const updateOrderStatus = async (id, status, userId) => {
     try {
-        const response = await axios.put(`${ORDER_API_URL}/api/orders/${id}/status?status=${status}`, {}, {
+        console.log('Paramètres de la requête:', { id, status, userId }); // Log des paramètres
+
+        const response = await axios.put(`${ORDER_API_URL}/api/orders/${id}/status`, null, {
+            params: { status }, // Utiliser params pour les paramètres de requête
             headers: {
                 'X-User-ID': userId
             }
         });
         return response.data;
     } catch (error) {
+        console.error('Erreur détaillée axios:', error.response ? error.response.data : error.message);
         handleApiError(error);
     }
 };

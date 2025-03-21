@@ -32,8 +32,14 @@ public class Order {
     private Map<String, Integer> extraIngredients = new HashMap<>();
 
 
-    @Column(nullable = false)
+    @Column(name = "totalPrice", nullable = false)
     private Double total = 0.0;
+
+    @Column(name = "status")
+    private String status = "";
+
+    @Column(name = "name")
+    private String name = "";
 
     @Column(name = "payment_status")
     private Boolean paid = false;
@@ -47,5 +53,6 @@ public class Order {
     protected void onCreate() {
         createdAt = new Date();
     }
+
 
 }

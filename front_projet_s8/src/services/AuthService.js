@@ -66,7 +66,20 @@ class AuthService {
             return null;
         }
     }
-
+    // Récupérer les informations de l'utilisateur connecté
+    async getCurrentUser() {
+        try {
+            const response = await axios.get(`${API_URL}/me`, {
+                headers: {
+                    Authorization: `Bearer ${this.getToken()}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Erreur lors de la récupération des informations utilisateur:', error);
+            return null;
+        }
+    }
     // Récupérer le token
     getToken() {
         return localStorage.getItem('token')
