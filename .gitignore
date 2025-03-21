@@ -1,6 +1,7 @@
 # Ignorer les fichiers de logs de MySQL/MariaDB
 /Ingredient_API/data/
 /Auth/data/
+/Pizza/data/
 # Ignorer les fichiers des bases de données en général
 *.sql
 *.log
