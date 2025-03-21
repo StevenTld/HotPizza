@@ -91,7 +91,40 @@ const handleApiError = (error) => {
     throw new Error('Erreur de connexion au serveur d\'authentification');
 };
 
+/**
+ * Met à jour les informations de l'utilisateur
+ */
+const updateUser = async (userData) => {
+    try {
+        console.log("Tentative de mise à jour de l'utilisateur:", userData);
+        console.log("URL de mise à jour complète:", `${AUTH_API_URL}/api/auth/update/${userData.id}`);
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+
+        const response = await axios.put(`${AUTH_API_URL}/api/auth/update/${userData.id}`, userData, config);
+        console.log("Réponse de mise à jour:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Erreur lors de la mise à jour de l'utilisateur:", error);
+
+        if (error.response) {
+            console.error("Détails de la réponse d'erreur:");
+            console.error("Status:", error.response.status);
+            console.error("Headers:", error.response.headers);
+            console.error("Data:", error.response.data);
+        }
+
+        handleApiError(error);
+    }
+};
+
+// Mettre à jour les exports
 module.exports = {
     verifyCredentials,
-    registerUser
+    registerUser,
+    updateUser  // Ajouter cette ligne
 };

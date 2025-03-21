@@ -49,4 +49,25 @@ router.get('/me', verifyToken, (req, res) => {
     res.json(req.user);
 });
 
+// Route de mise à jour de l'utilisateur (protégée par token)
+router.put('/update', verifyToken, async (req, res, next) => {
+    try {
+        // Récupérer l'ID de l'utilisateur depuis le token
+        const userId = req.user.userId;
+
+        // Créer un objet de mise à jour en incluant l'ID
+        const updateData = {
+            ...req.body,
+            id: userId
+        };
+
+        // Appeler le service de mise à jour
+        const updatedUser = await authService.updateUser(updateData);
+
+        res.json(updatedUser);
+    } catch (error) {
+        next(error);
+    }
+});
+
 module.exports = router;

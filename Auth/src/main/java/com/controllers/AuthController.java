@@ -58,6 +58,25 @@ public class AuthController {
         }
     }
 
+    @PutMapping("/update/{userId}")
+    public ResponseEntity<?> updateUser(
+            @PathVariable Long userId,
+            @RequestBody UserDTO userDTO
+    ) {
+        try {
+            // Assurez-vous que l'ID de l'utilisateur dans le DTO correspond au PathVariable
+            userDTO.setId(userId);
+            UserDTO updatedUser = authService.updateUser(userDTO);
+            return ResponseEntity.ok(updatedUser);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Erreur lors de la mise à jour de l'utilisateur: " + e.getMessage()));
+        }
+    }
+
     /**
      * Classe pour représenter une réponse d'erreur
      */

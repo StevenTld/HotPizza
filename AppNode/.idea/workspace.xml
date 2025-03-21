@@ -5,42 +5,38 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4165dddb-37ca-425c-b878-1d3d843f4e18" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../Auth/.gradle/8.12.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../Auth/.gradle/8.12.1/executionHistory/executionHistory.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/routes/comments.routes.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/comments.service.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../front_projet_s8/src/components/PizzaComments.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../front_projet_s8/src/services/CommentService.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/auth.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/auth.routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/auth.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/services/auth.service.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Auth/.gradle/8.12.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../Auth/.gradle/8.12.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Auth/.gradle/8.12.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../Auth/.gradle/8.12.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Auth/.gradle/8.12.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../Auth/.gradle/8.12.1/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Auth/.gradle/8.12.1/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../Auth/.gradle/8.12.1/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Auth/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../Auth/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Auth/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../Auth/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Auth/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/../Auth/.gradle/file-system.probe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Auth/build/classes/java/main/com/services/impl/AuthServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Auth/build/classes/java/main/com/services/impl/AuthServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Auth/build/reports/problems/problems-report.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Auth/build/reports/problems/problems-report.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Auth/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../Auth/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Order_API/.gradle/8.12.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../Order_API/.gradle/8.12.1/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Auth/src/main/java/com/controllers/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Auth/src/main/java/com/controllers/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Auth/src/main/java/com/mappers/UserMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Auth/src/main/java/com/mappers/UserMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Auth/src/main/java/com/services/impl/AuthServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Auth/src/main/java/com/services/impl/AuthServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Order_API/.gradle/8.12.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../Order_API/.gradle/8.12.1/executionHistory/executionHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Order_API/.gradle/8.12.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../Order_API/.gradle/8.12.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Order_API/.gradle/8.12.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../Order_API/.gradle/8.12.1/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Order_API/.gradle/8.12.1/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../Order_API/.gradle/8.12.1/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Order_API/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../Order_API/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Order_API/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../Order_API/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Order_API/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/../Order_API/.gradle/file-system.probe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Order_API/build/classes/java/main/com/controllers/OrderController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Order_API/build/classes/java/main/com/controllers/OrderController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Order_API/build/classes/java/main/com/dtos/CreateOrderDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Order_API/build/classes/java/main/com/dtos/CreateOrderDto.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Order_API/build/classes/java/main/com/dtos/OrderDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Order_API/build/classes/java/main/com/dtos/OrderDto.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Order_API/build/classes/java/main/com/entities/Order.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Order_API/build/classes/java/main/com/entities/Order.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Order_API/build/classes/java/main/com/mappers/OrderMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Order_API/build/classes/java/main/com/mappers/OrderMapper.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Order_API/build/classes/java/main/com/repositories/CartRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Order_API/build/classes/java/main/com/repositories/CartRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Order_API/build/classes/java/main/com/services/CartServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Order_API/build/classes/java/main/com/services/CartServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Order_API/build/classes/java/main/com/services/OrderServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Order_API/build/classes/java/main/com/services/OrderServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Order_API/build/reports/problems/problems-report.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Order_API/build/reports/problems/problems-report.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Order_API/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../Order_API/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pizza_API/.gradle/8.13/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../Pizza_API/.gradle/8.13/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Pizza_API/.gradle/8.13/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../Pizza_API/.gradle/8.13/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Pizza_API/.gradle/8.13/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../Pizza_API/.gradle/8.13/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Pizza_API/.gradle/8.13/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../Pizza_API/.gradle/8.13/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Pizza_API/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../Pizza_API/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pizza_API/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../Pizza_API/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Pizza_API/build/reports/problems/problems-report.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Pizza_API/build/reports/problems/problems-report.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Pizza_API/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/../Pizza_API/.gradle/file-system.probe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front_projet_s8/src/components/AdminAccountView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../front_projet_s8/src/components/AdminAccountView.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front_projet_s8/src/components/PizzaListView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../front_projet_s8/src/components/PizzaListView.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front_projet_s8/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front_projet_s8/src/router/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../front_projet_s8/src/services/AuthService.js" beforeDir="false" afterPath="$PROJECT_DIR$/../front_projet_s8/src/services/AuthService.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,21 +62,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Fusion&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/clement/Bureau/Projet_S8/HotPizza/AppNode&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "Fusion",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/clement/Bureau/Projet_S8/Pizza/HotPizza/AppNode",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
@@ -107,6 +103,7 @@
       <workItem from="1742391597064" duration="3384000" />
       <workItem from="1742416224279" duration="682000" />
       <workItem from="1742483852045" duration="1465000" />
+      <workItem from="1742560229782" duration="395000" />
     </task>
     <servers />
   </component>

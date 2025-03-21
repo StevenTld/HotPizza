@@ -219,8 +219,15 @@ export default {
 
     const saveUserData = async () => {
       try {
+        // Définir les données à mettre à jour
+        const updateData = {
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          email: userData.email
+        };
         // Ici vous devriez appeler votre service d'utilisateur pour sauvegarder les modifications
         // Comme vous n'avez pas de UserService, affichez un message temporaire
+        await AuthService.updateUser(updateData);
         alert('Fonctionnalité non disponible sans UserService.')
         editMode.value = false
       } catch (error) {

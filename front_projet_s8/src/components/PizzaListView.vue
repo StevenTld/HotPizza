@@ -93,6 +93,8 @@
                     >+</button>
                   </div>
                 </div>
+                <PizzaComments :pizzaId="selectedPizza.id" />
+
               </div>
             </div>
 
@@ -144,10 +146,14 @@ import PizzaService from '@/services/PizzaService';
 import IngredientService from '@/services/IngredientService';
 import CartService from '@/services/CartService';
 import AuthService from '@/services/AuthService';
+import PizzaComments from '@/components/PizzaComments.vue';
 import { ref, computed, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 export default {
+  components: {
+    PizzaComments
+  },
   name: 'PizzaListView',
   setup() {
     const router = useRouter();

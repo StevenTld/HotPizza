@@ -97,6 +97,7 @@ const routes = [
             requiresAuth: true
         }
     },
+
     // Nouvelles routes pour les comptes utilisateur et admin
     {
         path: '/compte',

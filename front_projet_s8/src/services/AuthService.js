@@ -12,7 +12,19 @@ class AuthService {
         return response.data
     }
 
-
+    async updateUser(updateData) {
+        try {
+            const response = await axios.put(`${API_URL}/me`, updateData, {
+                headers: {
+                    Authorization: `Bearer ${this.getToken()}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Erreur lors de la mise à jour des informations utilisateur:', error);
+            throw error;
+        }
+    }
 
     // Inscription
     async register(user) {

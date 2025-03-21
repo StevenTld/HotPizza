@@ -89,4 +89,36 @@ public class AuthServiceImpl {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
     }
+
+    @Transactional
+    public UserDTO updateUser(UserDTO userDTO) {
+        // Vérifier que l'utilisateur existe
+        User existingUser = userRepository.findById(userDTO.getId())
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+
+        // Vérifier si l'email est déjà utilisé par un autre utilisateur
+        if (userRepository.existsByEmail(userDTO.getEmail()) &&
+                !existingUser.getEmail().equals(userDTO.getEmail())) {
+            throw new RuntimeException("Cet email est déjà utilisé");
+        }
+
+        // Mettre à jour les champs
+        existingUser.setEmail(userDTO.getEmail());
+        existingUser.setFirstName(userDTO.getFirstName());
+        existingUser.setLastName(userDTO.getLastName());
+        existingUser.setRole(userDTO.getRole());
+
+        // Gérer le mot de passe s'il est fourni
+        if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        }
+
+        // Enregistrer les modifications
+        User updatedUser = userRepository.save(existingUser);
+
+        // Convertir et retourner le DTO
+        return userMapper.toDTO(updatedUser);
+    }
+
+
 }
